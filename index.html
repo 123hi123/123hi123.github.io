@@ -1,1117 +1,783 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Playful Digital Card</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@500;700;900&display=swap"
-    rel="stylesheet"
-  >
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>123hi123 GitHub 專案價值盤點</title>
   <style>
     :root {
-      --bg: #efe7dc;
-      --ink: #201714;
-      --paper: #fff7ea;
-      --panel: #d97a61;
-      --muted: rgba(32, 23, 20, 0.72);
-      --line: rgba(32, 23, 20, 0.78);
-      --soft-line: rgba(32, 23, 20, 0.11);
-      --noise: rgba(255, 247, 234, 0.22);
-      --shadow: 0 18px 0 rgba(32, 23, 20, 0.13);
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #16202a;
+      --muted: #64707d;
+      --line: #dbe1e8;
+      --brand: #145c63;
+      --brand-2: #0f766e;
+      --blue: #2563eb;
+      --green: #16803c;
+      --amber: #b45309;
+      --red: #b42318;
+      --chip: #eef2f5;
+      --shadow: 0 14px 36px rgba(22, 32, 42, 0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Noto Sans TC", "Microsoft JhengHei", sans-serif;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html,
     body {
       margin: 0;
-      min-height: 100%;
       background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
     }
 
-    body {
-      font-family: "Noto Sans TC", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--paper) 18%, transparent), transparent 28%),
-        radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--paper) 16%, transparent), transparent 22%),
-        linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 87%, var(--ink)));
-      overflow-x: hidden;
+    a {
+      color: var(--blue);
+      text-decoration: none;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--soft-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--soft-line) 1px, transparent 1px);
-      background-size: 28px 28px;
-      pointer-events: none;
-      opacity: 0.2;
-      mix-blend-mode: multiply;
+    a:hover {
+      text-decoration: underline;
     }
 
-    .poster {
-      width: min(1500px, calc(100% - 32px));
-      margin: 16px auto;
-      border: 2px solid var(--line);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
     }
 
     .topbar {
-      display: grid;
-      grid-template-columns: 94px minmax(0, 1.3fr) minmax(240px, 1fr) 156px;
-      border-bottom: 2px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(246, 247, 249, 0.94);
+      backdrop-filter: blur(12px);
     }
 
-    .topbox {
-      min-height: 94px;
-      padding: 18px 20px;
-      border-right: 2px solid var(--line);
+    .topbar-inner {
+      min-height: 64px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      background: color-mix(in srgb, var(--panel) 88%, var(--paper));
+      justify-content: space-between;
+      gap: 16px;
     }
 
-    .topbox:last-child {
-      border-right: 0;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
     }
 
     .mark {
-      display: inline-grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      width: 44px;
-      height: 48px;
-    }
-
-    .mark span {
-      background: var(--ink);
-    }
-
-    .top-meta,
-    .top-status,
-    .contrast-toggle {
-      width: 100%;
-      height: 100%;
-    }
-
-    .top-meta,
-    .top-status {
-      display: grid;
-      align-content: center;
-      gap: 10px;
-      justify-items: start;
-    }
-
-    .micro {
-      margin: 0;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.72rem;
-      line-height: 1.55;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .micro strong {
-      font-weight: 600;
-    }
-
-    .status-copy {
-      margin: 0;
-      font-family: "Noto Sans TC", sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      line-height: 1.3;
-      max-width: 32ch;
-    }
-
-    .contrast-toggle {
-      appearance: none;
-      border: 0;
-      background: transparent;
-      color: var(--ink);
-      cursor: pointer;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: background 180ms ease, color 180ms ease;
-    }
-
-    .contrast-toggle:hover,
-    .contrast-toggle:focus-visible {
-      background: color-mix(in srgb, var(--ink) 94%, transparent);
-      color: var(--paper);
-      outline: none;
-    }
-
-    .signal-panel {
-      height: clamp(160px, 22vw, 280px);
-      border-bottom: 2px solid var(--line);
-      overflow: hidden;
-      position: relative;
-      background:
-        linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, var(--paper)), color-mix(in srgb, var(--panel) 96%, black 4%));
-    }
-
-    .signal-panel::before,
-    .signal-panel::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .signal-panel::before {
-      background:
-        linear-gradient(180deg, transparent 0 12%, color-mix(in srgb, var(--paper) 10%, transparent) 12% 15%, transparent 15%),
-        linear-gradient(180deg, transparent 0 82%, color-mix(in srgb, var(--paper) 8%, transparent) 82% 86%, transparent 86%);
-      mix-blend-mode: screen;
-    }
-
-    .signal-panel::after {
-      background:
-        linear-gradient(90deg, transparent 0 48%, color-mix(in srgb, var(--ink) 5%, transparent) 48% 52%, transparent 52%);
-      mix-blend-mode: multiply;
-    }
-
-    .signal-grid {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0;
-      height: 100%;
-      padding: 0 clamp(12px, 3vw, 24px);
-    }
-
-    .signal-bar {
-      flex: 0 0 2px;
-      width: 2px;
-      height: 74%;
-      background: color-mix(in srgb, var(--ink) 94%, var(--paper) 6%);
-      transform: translateY(0) scaleY(1);
-      transform-origin: center;
-      border-radius: 999px;
-      opacity: 0.72;
-      will-change: transform;
-    }
-
-    .binary-strip {
-      border-bottom: 2px solid var(--line);
-      overflow: hidden;
-      white-space: nowrap;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      background: color-mix(in srgb, var(--panel) 80%, var(--ink) 20%);
-      color: color-mix(in srgb, var(--paper) 28%, var(--ink) 72%);
-    }
-
-    .binary-track {
-      display: inline-block;
-      min-width: 200%;
-      padding: 10px 0 9px;
-      animation: ticker 24s linear infinite;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
-      gap: 0;
-    }
-
-    .portrait-zone,
-    .content-zone {
-      min-width: 0;
-    }
-
-    .portrait-zone {
-      padding: clamp(20px, 3vw, 36px);
-      border-right: 2px solid var(--line);
-      display: grid;
-      align-content: start;
-      gap: 14px;
-    }
-
-    .portrait-frame {
-      aspect-ratio: 4 / 5;
-      border: 2px solid var(--line);
-      background:
-        linear-gradient(135deg, color-mix(in srgb, var(--paper) 18%, transparent), transparent 30%),
-        linear-gradient(180deg, color-mix(in srgb, var(--panel) 64%, var(--ink) 36%), color-mix(in srgb, var(--panel) 56%, var(--ink) 44%));
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 220ms ease, box-shadow 220ms ease;
-      transform-style: preserve-3d;
-    }
-
-    .portrait-frame:hover {
-      transform: rotate(-2deg) translateY(-6px);
-      box-shadow: 12px 12px 0 rgba(32, 23, 20, 0.12);
-    }
-
-    .portrait-frame::before,
-    .portrait-frame::after {
-      content: "";
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .portrait-frame::before {
-      inset: 14px;
-      border: 1px solid color-mix(in srgb, var(--paper) 26%, transparent);
-      clip-path: polygon(0 0, 100% 0, 100% 82%, 84% 100%, 0 100%);
-    }
-
-    .portrait-frame::after {
-      right: 18px;
-      bottom: 18px;
-      width: 70px;
-      aspect-ratio: 1;
-      background: var(--paper);
-      clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
-      opacity: 0.56;
-      mix-blend-mode: screen;
-      transform: rotate(18deg);
-    }
-
-    .portrait-frame img,
-    .portrait-fallback {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .portrait-frame img {
-      object-fit: cover;
-      display: none;
-      filter: saturate(0.95) contrast(1.05);
-    }
-
-    .portrait-frame.has-photo img {
-      display: block;
-    }
-
-    .portrait-fallback {
+      width: 36px;
+      height: 36px;
       display: grid;
       place-items: center;
-      font-family: "Anton", sans-serif;
-      font-size: clamp(4rem, 13vw, 7rem);
-      color: var(--paper);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      border-radius: 8px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 800;
     }
 
-    .portrait-note,
-    .portrait-path {
+    .brand-title {
       margin: 0;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.78rem;
-      line-height: 1.6;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .portrait-path {
-      word-break: break-all;
-      opacity: 0.86;
-    }
-
-    .content-zone {
-      display: grid;
-      grid-template-rows: auto auto 1fr auto;
-    }
-
-    .hero-head {
-      padding: clamp(22px, 3vw, 36px);
-      border-bottom: 2px solid var(--line);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-head::after {
-      content: "";
-      position: absolute;
-      right: clamp(16px, 3vw, 32px);
-      top: clamp(20px, 4vw, 48px);
-      width: clamp(62px, 9vw, 100px);
-      aspect-ratio: 1;
-      background: var(--ink);
-      clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
-      transform: rotate(calc(var(--spark-rotate, 0) * 1deg));
-      transition: transform 220ms ease;
-    }
-
-    .eyebrow {
-      margin: 0 0 14px;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.82rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .hero-title {
-      position: relative;
-      margin: 0;
-      font-size: clamp(3.6rem, 13vw, 10rem);
-      line-height: 0.9;
-      font-weight: 900;
-      letter-spacing: -0.1em;
+      font-size: 17px;
+      line-height: 1.2;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .hero-title::after {
-      content: attr(data-echo);
-      position: absolute;
-      left: 0.04em;
-      top: 0.05em;
-      color: var(--paper);
-      opacity: 0.35;
-      z-index: -1;
+    .brand-meta {
+      color: var(--muted);
+      font-size: 13px;
     }
 
-    .subline {
+    .top-actions {
       display: flex;
+      gap: 10px;
+      align-items: center;
       flex-wrap: wrap;
-      gap: 10px 16px;
-      margin-top: 14px;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      justify-content: flex-end;
     }
 
-    .subline span {
-      padding: 6px 10px;
+    .button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--paper) 14%, transparent);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      padding: 0 12px;
+      font-weight: 650;
+      font-size: 14px;
+      cursor: pointer;
     }
 
-    .copy-grid {
+    .button.primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+    }
+
+    main {
+      padding: 28px 0 56px;
+    }
+
+    .intro {
       display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(230px, 0.75fr);
-      border-bottom: 2px solid var(--line);
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 20px;
+      align-items: stretch;
     }
 
-    .intro-panel,
-    .vibe-panel {
-      padding: clamp(20px, 3vw, 32px);
-      min-width: 0;
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
     }
 
-    .intro-panel {
-      border-right: 2px solid var(--line);
+    .summary {
+      padding: 24px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.15;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
     }
 
     .lead {
-      margin: 0 0 18px;
-      font-size: clamp(1.04rem, 2vw, 1.22rem);
-      line-height: 1.75;
-      max-width: 34ch;
-    }
-
-    .story {
       margin: 0;
-      max-width: 42ch;
-      font-size: 0.98rem;
-      line-height: 1.9;
       color: var(--muted);
+      font-size: 16px;
+      max-width: 780px;
     }
 
-    .vibe-panel {
+    .stats {
       display: grid;
-      gap: 18px;
-      align-content: space-between;
-      background: color-mix(in srgb, var(--paper) 12%, transparent);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 16px;
     }
 
-    .vibe-label {
-      margin: 0;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcfd;
     }
 
-    .vibe-text {
-      margin: 0;
-      font-family: "Anton", sans-serif;
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      line-height: 0.95;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      max-width: 7ch;
+    .stat-value {
+      display: block;
+      font-size: 26px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--brand);
     }
 
-    .vibe-switch {
-      appearance: none;
-      border: 2px solid var(--line);
-      background: var(--ink);
-      color: var(--paper);
-      padding: 14px 16px;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+    .stat-label {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
-    .vibe-switch:hover,
-    .vibe-switch:focus-visible {
-      transform: translateY(-2px);
-      background: var(--paper);
-      color: var(--ink);
-      outline: none;
+    .section {
+      margin-top: 24px;
     }
 
-    .links-panel {
-      padding: clamp(20px, 3vw, 34px);
-      border-bottom: 2px solid var(--line);
-    }
-
-    .link-grid {
+    .rank-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
     }
 
-    .action-link {
-      min-height: 114px;
-      border: 2px solid var(--line);
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 10px;
-      padding: 16px 18px;
-      text-decoration: none;
-      color: var(--ink);
-      background: color-mix(in srgb, var(--paper) 14%, transparent);
-      transition: transform 160ms ease, background 160ms ease, color 160ms ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .action-link::after {
-      content: "";
-      position: absolute;
-      inset: auto auto 0 0;
-      width: 100%;
-      height: 0;
-      background: var(--ink);
-      transition: height 180ms ease;
-      z-index: 0;
-    }
-
-    .action-link:hover,
-    .action-link:focus-visible {
-      transform: translate(-4px, -4px);
-      color: var(--paper);
-      outline: none;
-    }
-
-    .action-link:hover::after,
-    .action-link:focus-visible::after {
-      height: 100%;
-    }
-
-    .action-link > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .action-meta,
-    .action-arrow {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .action-label {
-      font-family: "Anton", sans-serif;
-      font-size: clamp(1.55rem, 3vw, 2.3rem);
-      line-height: 1;
-      text-transform: uppercase;
-      word-break: break-word;
-    }
-
-    .footer-bar {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      padding: 16px 20px;
-      align-items: center;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .footer-bar p {
-      margin: 0;
-      line-height: 1.7;
-    }
-
-    .footer-note {
-      padding: 8px 12px;
+    .repo-card {
+      min-height: 172px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
       border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--paper) 12%, transparent);
+      border-radius: 8px;
+      background: #fff;
+      padding: 16px;
     }
 
-    .trail-layer {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 4;
-      mix-blend-mode: multiply;
+    .repo-card strong {
+      font-size: 17px;
     }
 
-    @keyframes ticker {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(-50%);
-      }
+    .repo-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
     }
 
-    @media (max-width: 1180px) {
-      .topbar {
-        grid-template-columns: 94px minmax(0, 1fr) minmax(220px, 1fr);
-      }
+    .badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-      .topbar .topbox:last-child {
-        grid-column: 1 / -1;
-        border-top: 2px solid var(--line);
-      }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 0 9px;
+      font-size: 12px;
+      font-weight: 750;
+      background: var(--chip);
+      color: var(--text);
+      white-space: nowrap;
+    }
 
-      .hero-title {
-        white-space: normal;
-      }
+    .grade-a {
+      background: #dcfce7;
+      color: var(--green);
+    }
+
+    .grade-b {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .grade-c {
+      background: #fef3c7;
+      color: var(--amber);
+    }
+
+    .grade-d {
+      background: #eef2f5;
+      color: #52606d;
+    }
+
+    .grade-risk {
+      background: #fee2e2;
+      color: var(--red);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) 190px 170px 140px;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 14px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border-top: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      min-width: 940px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      position: sticky;
+      top: 64px;
+      z-index: 2;
+      background: #f9fafb;
+      color: #334155;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    tr:hover td {
+      background: #fafafa;
+    }
+
+    .repo-name {
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .reason {
+      color: #344054;
+      max-width: 520px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .source-link {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fbfcfd;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border-left: 4px solid var(--brand-2);
+      background: #eefaf8;
+      color: #155e54;
+      border-radius: 8px;
+      margin-top: 14px;
+    }
+
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
     }
 
     @media (max-width: 900px) {
-      .hero-grid,
-      .copy-grid {
+      .intro,
+      .rank-grid,
+      .source-grid {
         grid-template-columns: 1fr;
       }
 
-      .content-zone {
-        order: 1;
+      .toolbar {
+        grid-template-columns: 1fr 1fr;
       }
 
-      .portrait-zone {
-        order: 2;
-        justify-items: start;
-      }
-
-      .portrait-zone,
-      .intro-panel {
-        border-right: 0;
-      }
-
-      .portrait-zone,
-      .hero-head,
-      .intro-panel,
-      .vibe-panel,
-      .links-panel {
-        border-bottom: 2px solid var(--line);
-      }
-
-      .copy-grid {
-        border-bottom: 0;
-      }
-
-      .link-grid {
-        grid-template-columns: 1fr;
+      h1 {
+        font-size: 28px;
       }
     }
 
-    @media (max-width: 680px) {
-      .poster {
-        width: min(100%, calc(100% - 16px));
-        margin: 8px auto;
+    @media (max-width: 620px) {
+      .shell {
+        width: min(100% - 20px, 1180px);
       }
 
-      .topbar {
-        grid-template-columns: 82px 1fr;
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px 0;
       }
 
-      .topbox {
-        min-height: 82px;
-        padding: 14px;
-      }
-
-      .topbar .topbox:nth-child(3),
-      .topbar .topbox:nth-child(4) {
-        grid-column: 1 / -1;
-      }
-
-      .signal-panel {
-        height: 146px;
-      }
-
-      .signal-bar {
-        flex-basis: 1.5px;
-        width: 1.5px;
-        height: 76%;
-      }
-
-      .portrait-frame {
-        width: min(100%, 320px);
-      }
-
-      .hero-title {
-        font-size: clamp(3rem, 22vw, 5.8rem);
-      }
-
-      .subline {
-        gap: 8px;
-      }
-
-      .subline span {
+      .top-actions {
         width: 100%;
+        justify-content: stretch;
       }
 
-      .footer-bar {
+      .button {
+        flex: 1;
+      }
+
+      .toolbar,
+      .stats {
         grid-template-columns: 1fr;
+      }
+
+      .summary {
+        padding: 18px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="poster" id="poster">
-    <header class="topbar">
-      <div class="topbox" aria-hidden="true">
-        <div class="mark">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="mark">GH</div>
+        <div>
+          <p class="brand-title">123hi123 專案價值盤點</p>
+          <div class="brand-meta">資料時間：2026-04-25 · 公開 repo：84</div>
         </div>
       </div>
-
-      <div class="topbox">
-        <div class="top-meta">
-          <p class="micro">Digital Card / Personal Signal</p>
-          <p class="micro"><strong>Signal Mode</strong> / Curious Builder / Motion Lover</p>
-        </div>
-      </div>
-
-      <div class="topbox">
-        <div class="top-status">
-          <p class="status-copy">打桌球、游泳、做小產品，想把有趣的點子做成能長期累積的作品。</p>
-        </div>
-      </div>
-
-      <div class="topbox">
-        <button class="contrast-toggle" id="contrastToggle" type="button">Change Contrast / 01</button>
-      </div>
-    </header>
-
-    <section class="signal-panel" id="signalPanel" aria-hidden="true">
-      <div class="signal-grid" id="signalGrid"></div>
-    </section>
-
-    <div class="binary-strip" aria-hidden="true">
-      <div class="binary-track">
-        01110000 // PING PONG // SWIM // BUILD PRODUCTS // PASSIVE INCOME // DIGITAL CARD // 01111000 // PING PONG // SWIM // BUILD PRODUCTS // PASSIVE INCOME // DIGITAL CARD //
+      <div class="top-actions">
+        <a class="button" href="123hi123_repo_value_report.md">開啟 Markdown</a>
+        <a class="button" href="playful-digital-card.html">舊首頁</a>
+        <a class="button primary" href="https://github.com/123hi123?tab=repositories">GitHub Repo</a>
       </div>
     </div>
+  </header>
 
-    <main class="hero-grid">
-      <aside class="portrait-zone">
-        <div class="portrait-frame" id="portraitFrame">
-          <div class="portrait-fallback" aria-hidden="true">01</div>
+  <main class="shell">
+    <section class="intro">
+      <div class="panel summary">
+        <h1>找出真正值得追的高價值專案</h1>
+        <p class="lead">
+          這份頁面把 123hi123 的公開 repo 依功能、同類競品、痛點強度與作者差異化做盤點。
+          結論很明確：最值得優先看的不是大型 fork，而是幾個小眾但痛點很尖的實用工具。
+        </p>
+        <div class="note">
+          Fork 只有在能看出明顯自有改造時才加分；否則原專案高價值不等於這個 fork 高價值。
         </div>
-        <p class="portrait-note">Play hard. Build slowly. Stay curious.</p>
-        <p class="portrait-path">桌球、游泳、小產品實驗，慢慢做出有記憶點的作品。</p>
-      </aside>
+      </div>
 
-      <section class="content-zone">
-        <div class="hero-head" id="heroHead">
-          <p class="eyebrow">Playful Builder / Kinetic Type / Digital Vibe</p>
-          <h1 class="hero-title" data-echo="Digital Card">Digital Card</h1>
-          <div class="subline">
-            <span>Table Tennis</span>
-            <span>Swimming</span>
-            <span>Side Project Builder</span>
-          </div>
+      <div class="panel stats" aria-label="統計摘要">
+        <div class="stat">
+          <span class="stat-value">84</span>
+          <span class="stat-label">公開 repositories</span>
         </div>
-
-        <div class="copy-grid">
-          <div class="intro-panel">
-            <p class="lead">
-              我喜歡把靈感拆成可以動手做的小作品，一邊打磨手感，
-              一邊摸索哪些產品真的能被人打開、記住，甚至慢慢帶來被動收入。
-            </p>
-            <p class="story">
-              這頁不是傳統履歷，而是我的數位名片。
-              它應該有一點衝擊力、一點節奏感，也要保留我正在學習與實驗的狀態。
-            </p>
-          </div>
-
-          <div class="vibe-panel">
-            <div>
-              <p class="vibe-label">Current Vibe</p>
-              <p class="vibe-text" id="vibeText">Fast Hands</p>
-            </div>
-            <button class="vibe-switch" id="vibeSwitch" type="button">Next Vibe / 01</button>
-          </div>
+        <div class="stat">
+          <span class="stat-value">6</span>
+          <span class="stat-label">最高價值候選</span>
         </div>
-
-        <div class="links-panel">
-          <div class="link-grid" aria-label="個人連結已移除">
-            <div class="action-link" data-label="Removed">
-              <span class="action-meta">Identity</span>
-              <span class="action-label">Removed</span>
-              <span class="action-arrow">--</span>
-            </div>
-
-            <div class="action-link" data-label="Removed">
-              <span class="action-meta">Social Links</span>
-              <span class="action-label">Removed</span>
-              <span class="action-arrow">--</span>
-            </div>
-
-            <div class="action-link" data-label="Removed">
-              <span class="action-meta">Contact</span>
-              <span class="action-label">Removed</span>
-              <span class="action-arrow">--</span>
-            </div>
-          </div>
+        <div class="stat">
+          <span class="stat-value">7</span>
+          <span class="stat-label">最高潛力候選</span>
         </div>
+        <div class="stat">
+          <span class="stat-value">2</span>
+          <span class="stat-label">風險項目</span>
+        </div>
+      </div>
+    </section>
 
-        <footer class="footer-bar">
-          <p>把靈感做成作品，把作品做出節奏，慢慢累積成自己的風格。</p>
-          <div class="footer-note">Open to new ideas.</div>
-        </footer>
-      </section>
-    </main>
-  </div>
-  <canvas class="trail-layer" id="trailLayer" aria-hidden="true"></canvas>
+    <section class="section">
+      <h2>最高價值候選</h2>
+      <div class="rank-grid" id="topProjects"></div>
+    </section>
+
+    <section class="section">
+      <h2>最高潛力候選</h2>
+      <div class="rank-grid" id="potentialProjects"></div>
+    </section>
+
+    <section class="section panel">
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="搜尋 repo、理由或分類">
+        <select id="gradeFilter" aria-label="依評級篩選">
+          <option value="all">所有評級</option>
+          <option value="A">A 高價值</option>
+          <option value="B">B 有潛力</option>
+          <option value="C">C 一般工具</option>
+          <option value="D">D 低優先</option>
+          <option value="Risk">Risk 風險</option>
+        </select>
+        <select id="categoryFilter" aria-label="依分類篩選">
+          <option value="all">所有分類</option>
+        </select>
+        <select id="sortSelect" aria-label="排序">
+          <option value="scoreDesc">價值由高到低</option>
+          <option value="nameAsc">名稱 A 到 Z</option>
+          <option value="categoryAsc">分類排序</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Repo</th>
+              <th>評級</th>
+              <th>分類</th>
+              <th>性質</th>
+              <th>判斷</th>
+              <th>建議</th>
+            </tr>
+          </thead>
+          <tbody id="repoTable"></tbody>
+        </table>
+        <div id="emptyState" class="empty" hidden>沒有符合條件的 repo。</div>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <div class="summary">
+        <h2>建議優先投入路線</h2>
+        <h3>Linux 實用工具線</h3>
+        <p class="muted">聚焦 `clipsync`、`bluetooth-volume-guard`、`qq-x11-patch`、`linux-wifi-diagnostics`。補安裝腳本、systemd user service、卸載方式與替代品比較。</p>
+        <h3>AI 工具鏈線</h3>
+        <p class="muted">聚焦 `gemini-patch`、`newapi-helper`、`cc-easy-switcher`、`project2tree`、`geminiocr`。統一命名、README 樣板與安裝方式。</p>
+        <h3>Telegram AI 工作流線</h3>
+        <p class="muted">聚焦 `tg-bawer`、`telegraph-parser`、`teletron-try`、`tg-standup-bot`。補 queue、rate limit、provider abstraction、SQLite 狀態管理與 Docker 部署。</p>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <div class="summary">
+        <h2>外部比較來源</h2>
+        <p class="muted">來源用於判斷同類替代品、成熟度與痛點是否真實存在。</p>
+      </div>
+      <div class="source-grid" id="sources"></div>
+    </section>
+  </main>
 
   <script>
-    const palettes = [
-      {
-        label: "Change Contrast / 01",
-        "--bg": "#efe7dc",
-        "--ink": "#201714",
-        "--paper": "#fff7ea",
-        "--panel": "#d97a61",
-        trail: "32, 23, 20"
-      },
-      {
-        label: "Change Contrast / 02",
-        "--bg": "#e7efe8",
-        "--ink": "#1a231d",
-        "--paper": "#fbfdf8",
-        "--panel": "#8ca48f",
-        trail: "26, 35, 29"
-      },
-      {
-        label: "Change Contrast / 03",
-        "--bg": "#e5ebf0",
-        "--ink": "#1c2730",
-        "--paper": "#f7fbff",
-        "--panel": "#8799b0",
-        trail: "28, 39, 48"
-      }
+    const repos = [
+      { name: "sentinel", grade: "B+", score: 84, category: "AI / Security", kind: "原創", url: "https://github.com/123hi123/sentinel", reason: "AI 個人安全稽核方向好；競品有 Lynis、osquery、Wazuh。", action: "靠非技術使用者 UX、可讀報告、read-only 安全邊界做差異化。" },
+      { name: "YCE-enhance", grade: "B-", score: 76, category: "AI / Prompt", kind: "fork", url: "https://github.com/123hi123/YCE-enhance", reason: "Prompt enhancement 有需求，但多 agent prompt 工具很多。", action: "需要用 benchmark 證明 4-agent pipeline 實際提升。" },
+      { name: "clipsync", grade: "A-", score: 90, category: "Linux / Wayland", kind: "原創", url: "https://github.com/123hi123/clipsync", reason: "Wayland / X11 剪貼簿同步是真痛點，尤其 xwayland-satellite、niri、Hyprland 使用者。", action: "補 systemd user service、相容性矩陣、替代品比較。" },
+      { name: "tg-bawer", grade: "B+", score: 84, category: "Telegram / AI", kind: "原創", url: "https://github.com/123hi123/tg-bawer", reason: "Telegram AI 圖片/影片 bot 功能完整，但競爭激烈。", action: "加 provider abstraction、隊列、權限、成本上限與 Docker 部署。" },
+      { name: "newapi-helper", grade: "A-", score: 91, category: "AI / API Gateway", kind: "原創", url: "https://github.com/123hi123/newapi-helper", reason: "NewAPI 管理 niche 工具，有 stars；多帳號、渠道查詢、優惠碼批量生成很聚焦。", action: "補 demo、匯入匯出、審計日誌，強化小圈子標準工具定位。" },
+      { name: "cloud-mail", grade: "D", score: 45, category: "Cloudflare", kind: "fork", url: "https://github.com/123hi123/cloud-mail", reason: "Cloudflare 郵件服務方向不錯，但目前看不到自有差異化。", action: "若要保留，需列出相對上游的修改。" },
+      { name: "testforai", grade: "D+", score: 50, category: "Learning / Demo", kind: "原創", url: "https://github.com/123hi123/testforai", reason: "日語單字卡作業型專案，完整但市場價值有限。", action: "適合作作品集展示，不適合列高價值產品。" },
+      { name: "geminiocr", grade: "B", score: 80, category: "AI / OCR", kind: "原創", url: "https://github.com/123hi123/geminiocr", reason: "PDF/圖片轉 Markdown 需求大；但 Marker、Docling、PyMuPDF4LLM 很強。", action: "主打 Gemini 批量、雙語、低門檻與整理流程。" },
+      { name: "how2cli", grade: "C+", score: 68, category: "AI / CLI", kind: "原創", url: "https://github.com/123hi123/how2cli", reason: "自然語言轉 shell 常見；aichat、ShellGPT、Copilot CLI 等競品成熟。", action: "強調小 Rust binary、速度、隱私或 local model。" },
+      { name: "fcitx5-mcbopomofo", grade: "D", score: 42, category: "Input Method", kind: "fork", url: "https://github.com/123hi123/fcitx5-mcbopomofo", reason: "原專案高價值，但 fork 無明顯自有價值。", action: "補上游差異或 PR 紀錄。" },
+      { name: "gemini-patch", grade: "A", score: 95, category: "AI / CLI", kind: "原創", url: "https://github.com/123hi123/gemini-patch", reason: "星數與 fork 數最高，直接對 Gemini CLI retry 痛點。", action: "降低 brittle 風險，改成版本檢測、dry-run、回復功能。" },
+      { name: "sub2api", grade: "D+", score: 52, category: "AI / API Gateway", kind: "fork", url: "https://github.com/123hi123/sub2api", reason: "LLM 訂閱轉 API 是熱門需求，但 fork 未見差異化。", action: "列出自有改造，否則不建議主推。" },
+      { name: "abcard", grade: "Risk", score: 5, category: "Automation / Risk", kind: "fork", url: "https://github.com/123hi123/abcard", reason: "README 涉及自動註冊、支付流程與驗證繞過描述。", action: "不建議列為正向高價值作品。" },
+      { name: "123hi123.github.io", grade: "D", score: 40, category: "Website", kind: "原創", url: "https://github.com/123hi123/123hi123.github.io", reason: "展示不足，價值證據不足。", action: "可改成作品集入口。" },
+      { name: "tg-bawer-docs", grade: "C", score: 60, category: "Docs", kind: "原創", url: "https://github.com/123hi123/tg-bawer-docs", reason: "文件倉庫，價值依附 tg-bawer。", action: "併回主 repo 或做正式文檔站。" },
+      { name: "teletron-try", grade: "B-", score: 76, category: "Telegram / Automation", kind: "原創", url: "https://github.com/123hi123/teletron-try", reason: "Telegram 群組排程與轉發管理有實用性。", action: "補安全、部署、權限控管與任務日誌。" },
+      { name: "CLIProxyAPI", grade: "D+", score: 52, category: "AI / API Gateway", kind: "fork", url: "https://github.com/123hi123/CLIProxyAPI", reason: "CLI 轉相容 API 概念強，但 fork 沒差異化。", action: "若有自有修改，需寫清楚。" },
+      { name: "elevenlabs-linux-voice-input-rust", grade: "B-", score: 76, category: "Linux / Voice", kind: "原創", url: "https://github.com/123hi123/elevenlabs-linux-voice-input-rust", reason: "Linux 語音輸入有痛點；依賴 ElevenLabs 會限制受眾。", action: "加快捷鍵、狀態列、離線模型替代與低延遲模式。" },
+      { name: "qq-x11-patch", grade: "B-", score: 75, category: "Linux / App Fix", kind: "原創", url: "https://github.com/123hi123/qq-x11-patch", reason: "Linux QQ X11 連線守護程式，很窄但對目標用戶實用。", action: "補故障案例、安裝/卸載與版本支援。" },
+      { name: "bluetooth-volume-guard", grade: "A-", score: 89, category: "Linux / Audio", kind: "原創", url: "https://github.com/123hi123/bluetooth-volume-guard", reason: "聽力保護是強痛點，事件驅動且簡單。", action: "擴成 PipeWire/PulseAudio 音量保護器，加 GUI 或 TUI 設定。" },
+      { name: "ldo", grade: "D+", score: 50, category: "Forum / TUI", kind: "fork", url: "https://github.com/123hi123/ldo", reason: "論壇終端客戶端有趣，但 fork 無明顯自有價值。", action: "補上游差異。" },
+      { name: "flclash-aur-autoupdate", grade: "C+", score: 68, category: "Linux / Packaging", kind: "原創", url: "https://github.com/123hi123/flclash-aur-autoupdate", reason: "AUR 自動維護實用，但目標限於單一套件。", action: "泛化成 AUR AppImage updater template。" },
+      { name: "DrssionPageMCP_linux_fixed", grade: "B", score: 80, category: "MCP / Browser", kind: "原創", url: "https://github.com/123hi123/DrssionPageMCP_linux_fixed", reason: "MCP 瀏覽器自動化有需求；Playwright MCP 是強競品。", action: "定位在 DrissionPage、Python、爬蟲、Linux 修復 niche。" },
+      { name: "auto-read-liunxdo", grade: "D", score: 38, category: "Automation / Risk", kind: "fork", url: "https://github.com/123hi123/auto-read-liunxdo", reason: "論壇自動閱讀/點讚容易被平台視為濫用。", action: "不建議主推。" },
+      { name: "ZenlessZoneZero-OneDragon", grade: "D", score: 38, category: "Game Automation", kind: "fork", url: "https://github.com/123hi123/ZenlessZoneZero-OneDragon", reason: "遊戲自動化 fork，合規風險與可遷移價值較低。", action: "不列高價值。" },
+      { name: "amazonq", grade: "D", score: 35, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/amazonq", reason: "資訊不足。", action: "補 README。" },
+      { name: "blinko", grade: "D", score: 42, category: "AI / Notes", kind: "fork", url: "https://github.com/123hi123/blinko", reason: "原專案是 AI note 工具，但 fork 無差異化。", action: "補自有修改。" },
+      { name: "project-graph", grade: "D+", score: 52, category: "Notes / Graph", kind: "fork", url: "https://github.com/123hi123/project-graph", reason: "節點式筆記想法好，但 fork 無差異化。", action: "如果有核心改造，需寫清楚。" },
+      { name: "VocabMeld", grade: "B-", score: 75, category: "Language Learning", kind: "fork", url: "https://github.com/123hi123/VocabMeld", reason: "沉浸式雙語學習有潛力。", action: "確認自有修改，做 Chrome/Firefox 發布與學習成效設計。" },
+      { name: "musci2learn", grade: "C", score: 58, category: "Learning / Music", kind: "原創", url: "https://github.com/123hi123/musci2learn", reason: "名稱像音樂學習工具，但 README/描述不足。", action: "補定位與 demo。" },
+      { name: "h5-game-collection", grade: "D", score: 35, category: "Games", kind: "fork", url: "https://github.com/123hi123/h5-game-collection", reason: "遊戲合集，非核心技術作品。", action: "不列高價值。" },
+      { name: "dnsx", grade: "D", score: 42, category: "Security / DNS", kind: "fork", url: "https://github.com/123hi123/dnsx", reason: "原工具高價值，但 fork 無差異化。", action: "補上游差異。" },
+      { name: "dnsx-action", grade: "D", score: 40, category: "Security / DNS", kind: "fork", url: "https://github.com/123hi123/dnsx-action", reason: "原方向有價值，但 fork 無差異化。", action: "補差異或歸檔。" },
+      { name: "l-ex", grade: "C+", score: 66, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/l-ex", reason: "有 4 stars，但描述不足。", action: "補 README 才能準確評估。" },
+      { name: "fc-of-money", grade: "D", score: 35, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/fc-of-money", reason: "資訊不足。", action: "補 README。" },
+      { name: "time-minus-stress", grade: "C", score: 60, category: "OCR / Utility", kind: "原創", url: "https://github.com/123hi123/time-minus-stress", reason: "紅色下劃線 OCR 小工具，場景很窄。", action: "適合作為個人工作流工具。" },
+      { name: "time-minus", grade: "C", score: 58, category: "OCR / Utility", kind: "原創", url: "https://github.com/123hi123/time-minus", reason: "與 time-minus-stress 重疊。", action: "合併重複 repo。" },
+      { name: "ai-basic-learn", grade: "D", score: 36, category: "Learning / AI", kind: "原創", url: "https://github.com/123hi123/ai-basic-learn", reason: "學習 repo。", action: "可放作品集，但不列產品高價值。" },
+      { name: "ai-paper-assistant", grade: "B-", score: 76, category: "AI / Paper", kind: "原創", url: "https://github.com/123hi123/ai-paper-assistant", reason: "AI 論文閱讀需求大，但競品很多。", action: "主打 PDF 管理、並排閱讀、歸檔與本地流程。" },
+      { name: "machine-learning-portfolio", grade: "D+", score: 52, category: "Learning / Portfolio", kind: "原創", url: "https://github.com/123hi123/machine-learning-portfolio", reason: "作品集型專案，可展示能力但不是產品。", action: "整理成果與圖表即可。" },
+      { name: "qwen3-asr-studio", grade: "C", score: 60, category: "AI / ASR", kind: "原創", url: "https://github.com/123hi123/qwen3-asr-studio", reason: "ASR Studio 方向有用，但 README 仍像 scaffold。", action: "補完整產品流程與 demo。" },
+      { name: "Image_Translator_LMM_GUI", grade: "C+", score: 67, category: "AI / Translation", kind: "原創/修復", url: "https://github.com/123hi123/Image_Translator_LMM_GUI", reason: "圖像翻譯 GUI 有需求，但基於上游修復。", action: "列出修復清單與對比效果。" },
+      { name: "simple-svg", grade: "B-", score: 77, category: "Design / Utility", kind: "原創", url: "https://github.com/123hi123/simple-svg", reason: "SVG 預覽與轉 PNG/ICO 是剛需小工具，已有 11 stars。", action: "包成離線 PWA 或桌面工具。" },
+      { name: "Music-script", grade: "C", score: 61, category: "Media / Utility", kind: "原創", url: "https://github.com/123hi123/Music-script", reason: "音樂壓縮包處理、封面/歌詞嵌入，實用但小眾。", action: "補批次錯誤處理與使用範例。" },
+      { name: "telegraph-parser", grade: "B-", score: 75, category: "Telegram / Media", kind: "原創", url: "https://github.com/123hi123/telegraph-parser", reason: "自動抓 Telegraph 圖片打包，場景具體。", action: "補 Docker、限流、檔案大小限制。" },
+      { name: "tran3", grade: "D", score: 35, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/tran3", reason: "資訊不足。", action: "補 README。" },
+      { name: "tgbot-telegraph-parser", grade: "D", score: 35, category: "Telegram / Media", kind: "原創", url: "https://github.com/123hi123/tgbot-telegraph-parser", reason: "空或未成形，價值依附 telegraph-parser。", action: "合併或歸檔。" },
+      { name: "CloudPaste", grade: "D+", score: 52, category: "Cloudflare", kind: "fork", url: "https://github.com/123hi123/CloudPaste", reason: "Cloudflare paste/clipboard 競品多，fork 無差異化。", action: "補自有改造或合併到工具箱。" },
+      { name: "cc-easy-switcher", grade: "B+", score: 86, category: "AI / CLI", kind: "原創", url: "https://github.com/123hi123/cc-easy-switcher", reason: "Claude Code 多帳號切換是真痛點。", action: "擴成跨 Claude Code、Codex、Gemini CLI 的 profile manager。" },
+      { name: "cf-copypad", grade: "C+", score: 66, category: "Cloudflare", kind: "原創", url: "https://github.com/123hi123/cf-copypad", reason: "Cloudflare Workers clipboard 可用，但同類 pastebin/clipboard 太多。", action: "和圖床、paste、mail 合成 Cloudflare 個人工具箱。" },
+      { name: "bottom-to-top", grade: "D", score: 35, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/bottom-to-top", reason: "資訊不足。", action: "補 README。" },
+      { name: "oop-tool", grade: "D", score: 35, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/oop-tool", reason: "資訊不足。", action: "補 README。" },
+      { name: "router-test", grade: "C+", score: 66, category: "Proxy / HTTP", kind: "原創", url: "https://github.com/123hi123/router-test", reason: "HTTP proxy 監控/改寫有用，但描述過泛。", action: "明確產品定位與使用案例。" },
+      { name: "paper-25qbit-try", grade: "D", score: 36, category: "Notebook / Experiment", kind: "原創", url: "https://github.com/123hi123/paper-25qbit-try", reason: "Notebook/實驗型。", action: "整理成文章或研究筆記。" },
+      { name: "tg-standup-bot", grade: "C", score: 62, category: "Telegram / Productivity", kind: "原創", url: "https://github.com/123hi123/tg-standup-bot", reason: "Standup bot 常見。", action: "整合日報、提醒、匯出與團隊報表。" },
+      { name: "linux-wifi-diagnostics", grade: "C+", score: 68, category: "Linux / Diagnostics", kind: "原創", url: "https://github.com/123hi123/linux-wifi-diagnostics", reason: "Linux Wi-Fi 診斷是實用方向，但資訊不足。", action: "補診斷報告、修復建議與 distro 支援。" },
+      { name: "bloch-sphere-simulator", grade: "C", score: 61, category: "Education / Quantum", kind: "原創", url: "https://github.com/123hi123/bloch-sphere-simulator", reason: "量子教學 demo，有教育價值但產品面有限。", action: "補互動教學與課程範例。" },
+      { name: "fight", grade: "D", score: 35, category: "Game / Demo", kind: "原創", url: "https://github.com/123hi123/fight", reason: "HTML demo，資訊不足。", action: "補玩法與部署。" },
+      { name: "colab", grade: "D", score: 36, category: "Notebook / Experiment", kind: "原創", url: "https://github.com/123hi123/colab", reason: "Notebook/實驗型。", action: "不列高價值。" },
+      { name: "tg-rail-shouting", grade: "C", score: 60, category: "Telegram / Notification", kind: "原創", url: "https://github.com/123hi123/tg-rail-shouting", reason: "Telegram 通知/喊話類，需求依場景。", action: "補具體場景與部署。" },
+      { name: "openstuck", grade: "D", score: 35, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/openstuck", reason: "資訊不足。", action: "補 README。" },
+      { name: "telegram-channel-mcp", grade: "D+", score: 52, category: "MCP / Telegram", kind: "fork", url: "https://github.com/123hi123/telegram-channel-mcp", reason: "Telegram MCP 有用，但 fork 無差異化。", action: "補上游差異。" },
+      { name: "remote-mcp-server-authless", grade: "C", score: 59, category: "MCP / Server", kind: "原創", url: "https://github.com/123hi123/remote-mcp-server-authless", reason: "MCP remote server demo；authless 不適合生產。", action: "加認證與部署安全邊界。" },
+      { name: "PTSD-Practice-Giraffe-Adventure-main", grade: "D", score: 35, category: "Game / Coursework", kind: "原創", url: "https://github.com/123hi123/PTSD-Practice-Giraffe-Adventure-main", reason: "大型 C 作業/遊戲資產型 repo，非高價值工具。", action: "作品集化即可。" },
+      { name: "DrssionPageMCP", grade: "D+", score: 52, category: "MCP / Browser", kind: "fork", url: "https://github.com/123hi123/DrssionPageMCP", reason: "原方向有價值，但 fork 無差異化。", action: "與 linux_fixed 合併。" },
+      { name: "cf-img-bed-upload-auto", grade: "C+", score: 66, category: "Cloudflare / Image", kind: "原創", url: "https://github.com/123hi123/cf-img-bed-upload-auto", reason: "Cloudflare 圖床自動上傳工具，實用但競品多。", action: "合併到 Cloudflare 個人工具箱。" },
+      { name: "layered-design-flowchart", grade: "C", score: 58, category: "Diagram / Tool", kind: "原創", url: "https://github.com/123hi123/layered-design-flowchart", reason: "流程圖/設計工具，需 demo 與明確需求。", action: "補案例與輸出格式。" },
+      { name: "CloudFlare-ImgBed", grade: "D", score: 42, category: "Cloudflare / Image", kind: "fork", url: "https://github.com/123hi123/CloudFlare-ImgBed", reason: "原專案有價值，fork 無差異化。", action: "補自有改造。" },
+      { name: "Text-to-Speech-Reader", grade: "C", score: 58, category: "TTS / Utility", kind: "原創", url: "https://github.com/123hi123/Text-to-Speech-Reader", reason: "TTS 閱讀器常見。", action: "需特殊 UX 才有價值。" },
+      { name: "OpenManus", grade: "D", score: 42, category: "AI / Agent", kind: "fork", url: "https://github.com/123hi123/OpenManus", reason: "原專案高知名度，但 fork 不算作者原創。", action: "補差異或不主推。" },
+      { name: "rss-read", grade: "C+", score: 66, category: "RSS", kind: "原創", url: "https://github.com/123hi123/rss-read", reason: "RSS 閱讀器需求穩定，但同類多。", action: "主打極簡、Telegram 或本地化。" },
+      { name: "RSSHub", grade: "D", score: 42, category: "RSS", kind: "fork", url: "https://github.com/123hi123/RSSHub", reason: "原專案高價值，但 fork 無差異化。", action: "補上游差異。" },
+      { name: "project2tree", grade: "B-", score: 77, category: "AI / Context", kind: "原創", url: "https://github.com/123hi123/project2tree", reason: "把專案轉 tree/context 是 AI coding 實用小工具。", action: "做成 CLI，加 ignore 規則、token 預估與輸出模板。" },
+      { name: "flowerss-bot", grade: "D", score: 42, category: "RSS / Telegram", kind: "fork", url: "https://github.com/123hi123/flowerss-bot", reason: "Telegram RSS bot 原方向有用，但 fork 無差異化。", action: "補自有修改。" },
+      { name: "scrape", grade: "D", score: 35, category: "Scraping", kind: "原創", url: "https://github.com/123hi123/scrape", reason: "資訊不足。", action: "補 README。" },
+      { name: "SimpleRemote", grade: "Risk", score: 10, category: "Remote Admin / Risk", kind: "fork", url: "https://github.com/123hi123/SimpleRemote", reason: "遠端管理工具天然有資安濫用風險。", action: "若保留，需明確合法用途、安全邊界與權限模型。" },
+      { name: "gemini-balance", grade: "D+", score: 52, category: "AI / API Gateway", kind: "fork", url: "https://github.com/123hi123/gemini-balance", reason: "Gemini 輪詢代理有需求，但 fork 無差異化。", action: "補改造內容。" },
+      { name: "ProgrammingProject", grade: "D", score: 35, category: "Coursework", kind: "原創", url: "https://github.com/123hi123/ProgrammingProject", reason: "作業/練習型。", action: "不列高價值。" },
+      { name: "------", grade: "D", score: 32, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/------", reason: "命名與描述不足，難以評估。", action: "補 README 或歸檔。" },
+      { name: "cursor_project", grade: "D", score: 30, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/cursor_project", reason: "空 repo。", action: "歸檔或刪除。" },
+      { name: "Note", grade: "D", score: 35, category: "Notes", kind: "原創", url: "https://github.com/123hi123/Note", reason: "筆記 repo，非產品。", action: "不列高價值。" },
+      { name: "lobe-chat", grade: "D", score: 42, category: "AI / Chat", kind: "fork", url: "https://github.com/123hi123/lobe-chat", reason: "原專案高價值，但 fork 無差異化。", action: "補自有修改或不主推。" },
+      { name: "project", grade: "D+", score: 50, category: "Unknown", kind: "原創", url: "https://github.com/123hi123/project", reason: "舊 JavaScript 專案，描述不足；雖有 1 fork 但難判斷。", action: "補 README 與 demo。" },
+      { name: "juejin-helper", grade: "D", score: 38, category: "Automation / Risk", kind: "fork", url: "https://github.com/123hi123/juejin-helper", reason: "掘金自動化助手，平台自動化風險高，fork 無差異化。", action: "不建議主推。" }
     ];
 
-    const vibes = [
-      "Fast Hands",
-      "Calm Laps",
-      "Ship Tiny Products",
-      "Build And Repeat"
+    const topProjectNames = ["gemini-patch", "newapi-helper", "clipsync", "bluetooth-volume-guard", "tg-bawer", "sentinel"];
+    const potentialProjectNames = [
+      "cc-easy-switcher",
+      "DrssionPageMCP_linux_fixed",
+      "geminiocr",
+      "elevenlabs-linux-voice-input-rust",
+      "qq-x11-patch",
+      "simple-svg",
+      "project2tree"
     ];
 
-    const contrastToggle = document.getElementById("contrastToggle");
-    const vibeSwitch = document.getElementById("vibeSwitch");
-    const vibeText = document.getElementById("vibeText");
-    const signalPanel = document.getElementById("signalPanel");
-    const signalGrid = document.getElementById("signalGrid");
-    const heroHead = document.getElementById("heroHead");
-    const profilePhoto = document.getElementById("profilePhoto");
-    const portraitFrame = document.getElementById("portraitFrame");
-    const actionLinks = document.querySelectorAll(".action-link");
-    const prefersReducedMotion = false;
-    const supportsFinePointer =
-      window.matchMedia("(any-pointer: fine)").matches ||
-      window.matchMedia("(hover: hover)").matches ||
-      navigator.maxTouchPoints === 0;
-    const trailLayer = document.getElementById("trailLayer");
-    const trailContext = trailLayer.getContext("2d");
-    const trailEnabled = supportsFinePointer && !prefersReducedMotion;
+    const sources = [
+      ["123hi123 repositories", "https://github.com/123hi123?tab=repositories"],
+      ["Gemini CLI retry issue", "https://github.com/google-gemini/gemini-cli/issues/19948"],
+      ["Gemini CLI retry loop issue", "https://github.com/google-gemini/gemini-cli/issues/23982"],
+      ["xwayland-satellite clipboard issue", "https://github.com/Supreeeme/xwayland-satellite/issues/91"],
+      ["Hyprland clipboard managers", "https://wiki.hypr.land/Useful-Utilities/Clipboard-Managers/"],
+      ["ArchWiki Clipboard", "https://wiki.archlinux.org/title/Clipboard"],
+      ["Lynis", "https://cisofy.com/lynis/"],
+      ["osquery", "https://osquery.io/"],
+      ["Wazuh", "https://wazuh.com/"],
+      ["aichat", "https://github.com/sigoden/aichat"],
+      ["Marker", "https://github.com/datalab-to/marker"],
+      ["PyMuPDF4LLM", "https://github.com/pymupdf/pymupdf4llm"],
+      ["Cloudflare Workers KV", "https://developers.cloudflare.com/kv/"],
+      ["pastebin-worker", "https://github.com/xiadd/pastebin-worker"],
+      ["QuantumNous/new-api", "https://github.com/QuantumNous/new-api"],
+      ["Playwright MCP", "https://github.com/microsoft/playwright-mcp"],
+      ["Playwright MCP docs", "https://playwright.dev/docs/getting-started-mcp"],
+      ["claude-swap", "https://github.com/realiti4/claude-swap"]
+    ];
 
-    let paletteIndex = 0;
-    let vibeIndex = 0;
-    let pointer = 0.5;
-    let smoothedPointer = 0.5;
-    let pointerY = window.innerHeight / 2;
-    let phase = 0;
-    let signalBars = [];
-    let currentTrailColor = palettes[0].trail;
-    let lastPointerMove = 0;
-    let trailStrength = 0;
-    let trailTarget = {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2
+    const elements = {
+      topProjects: document.querySelector("#topProjects"),
+      potentialProjects: document.querySelector("#potentialProjects"),
+      table: document.querySelector("#repoTable"),
+      empty: document.querySelector("#emptyState"),
+      search: document.querySelector("#searchInput"),
+      grade: document.querySelector("#gradeFilter"),
+      category: document.querySelector("#categoryFilter"),
+      sort: document.querySelector("#sortSelect"),
+      sources: document.querySelector("#sources")
     };
-    let trailPoints = [];
 
-    function clampNumber(value, min, max) {
-      return Math.min(Math.max(value, min), max);
+    function gradeClass(grade) {
+      if (grade === "Risk") return "grade-risk";
+      if (grade.startsWith("A")) return "grade-a";
+      if (grade.startsWith("B")) return "grade-b";
+      if (grade.startsWith("C")) return "grade-c";
+      return "grade-d";
     }
 
-    function applyPalette(index) {
-      const palette = palettes[index];
-      Object.entries(palette).forEach(([key, value]) => {
-        if (key.startsWith("--")) {
-          document.documentElement.style.setProperty(key, value);
-        }
+    function card(repo) {
+      return `
+        <article class="repo-card">
+          <div>
+            <div class="badges">
+              <span class="badge ${gradeClass(repo.grade)}">${repo.grade}</span>
+              <span class="badge">${repo.category}</span>
+              <span class="badge">${repo.kind}</span>
+            </div>
+            <p><strong><a href="${repo.url}">${repo.name}</a></strong></p>
+            <p>${repo.reason}</p>
+          </div>
+          <p><span class="muted">下一步：</span>${repo.action}</p>
+        </article>
+      `;
+    }
+
+    function renderCards() {
+      const byName = new Map(repos.map((repo) => [repo.name, repo]));
+      elements.topProjects.innerHTML = topProjectNames.map((name) => card(byName.get(name))).join("");
+      elements.potentialProjects.innerHTML = potentialProjectNames.map((name) => card(byName.get(name))).join("");
+    }
+
+    function renderCategoryOptions() {
+      const categories = Array.from(new Set(repos.map((repo) => repo.category))).sort((a, b) => a.localeCompare(b));
+      for (const category of categories) {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        elements.category.appendChild(option);
+      }
+    }
+
+    function renderSources() {
+      elements.sources.innerHTML = sources.map(([title, url]) => `
+        <a class="source-link" href="${url}">${title}</a>
+      `).join("");
+    }
+
+    function filterRepos() {
+      const query = elements.search.value.trim().toLowerCase();
+      const grade = elements.grade.value;
+      const category = elements.category.value;
+      const sort = elements.sort.value;
+
+      const filtered = repos.filter((repo) => {
+        const haystack = `${repo.name} ${repo.grade} ${repo.category} ${repo.kind} ${repo.reason} ${repo.action}`.toLowerCase();
+        const gradeMatch = grade === "all" || repo.grade.startsWith(grade) || repo.grade === grade;
+        const categoryMatch = category === "all" || repo.category === category;
+        return haystack.includes(query) && gradeMatch && categoryMatch;
       });
-      currentTrailColor = palette.trail;
-      contrastToggle.textContent = palette.label;
+
+      filtered.sort((a, b) => {
+        if (sort === "nameAsc") return a.name.localeCompare(b.name);
+        if (sort === "categoryAsc") return a.category.localeCompare(b.category) || b.score - a.score;
+        return b.score - a.score || a.name.localeCompare(b.name);
+      });
+
+      return filtered;
     }
 
-    function syncPhotoState() {
-      if (profilePhoto && profilePhoto.complete && profilePhoto.naturalWidth > 0) {
-        portraitFrame.classList.add("has-photo");
-      } else {
-        portraitFrame.classList.remove("has-photo");
-      }
+    function renderTable() {
+      const rows = filterRepos();
+      elements.empty.hidden = rows.length !== 0;
+      elements.table.innerHTML = rows.map((repo) => `
+        <tr>
+          <td><a class="repo-name" href="${repo.url}">${repo.name}</a></td>
+          <td><span class="badge ${gradeClass(repo.grade)}">${repo.grade}</span></td>
+          <td>${repo.category}</td>
+          <td>${repo.kind}</td>
+          <td class="reason">${repo.reason}</td>
+          <td class="reason">${repo.action}</td>
+        </tr>
+      `).join("");
     }
 
-    function buildSignalBars() {
-      const count = clampNumber(Math.round(signalPanel.clientWidth / 16), 36, 96);
-      signalGrid.textContent = "";
-      const fragment = document.createDocumentFragment();
-      for (let i = 0; i < count; i += 1) {
-        const bar = document.createElement("span");
-        bar.className = "signal-bar";
-        bar.dataset.index = i;
-        fragment.appendChild(bar);
-      }
-      signalGrid.appendChild(fragment);
-      return [...signalGrid.querySelectorAll(".signal-bar")];
+    for (const control of [elements.search, elements.grade, elements.category, elements.sort]) {
+      control.addEventListener("input", renderTable);
+      control.addEventListener("change", renderTable);
     }
 
-    function resizeTrailLayer() {
-      if (!trailEnabled) {
-        trailLayer.style.display = "none";
-        return;
-      }
-
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      trailLayer.width = Math.round(window.innerWidth * ratio);
-      trailLayer.height = Math.round(window.innerHeight * ratio);
-      trailLayer.style.width = window.innerWidth + "px";
-      trailLayer.style.height = window.innerHeight + "px";
-      trailContext.setTransform(ratio, 0, 0, ratio, 0, 0);
-    }
-
-    function buildTrailPoints() {
-      trailPoints = Array.from({ length: 12 }, () => ({
-        x: trailTarget.x,
-        y: trailTarget.y
-      }));
-    }
-
-    function drawTrail(now) {
-      if (!trailEnabled) {
-        return;
-      }
-
-      trailContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-      const isActive = now - lastPointerMove < 900;
-      trailStrength += ((isActive ? 1 : 0) - trailStrength) * 0.08;
-
-      if (trailStrength < 0.02) {
-        return;
-      }
-
-      trailPoints[0].x += (trailTarget.x - trailPoints[0].x) * 0.28;
-      trailPoints[0].y += (trailTarget.y - trailPoints[0].y) * 0.28;
-
-      for (let index = 1; index < trailPoints.length; index += 1) {
-        trailPoints[index].x += (trailPoints[index - 1].x - trailPoints[index].x) * 0.24;
-        trailPoints[index].y += (trailPoints[index - 1].y - trailPoints[index].y) * 0.24;
-      }
-
-      for (let index = trailPoints.length - 1; index >= 0; index -= 1) {
-        const point = trailPoints[index];
-        const progress = 1 - index / trailPoints.length;
-        const radius = 4 + progress * 10;
-        const alpha = (0.012 + progress * 0.07) * trailStrength;
-
-        trailContext.fillStyle = "rgba(" + currentTrailColor + ", " + alpha.toFixed(3) + ")";
-        trailContext.beginPath();
-        trailContext.arc(point.x, point.y, radius, 0, Math.PI * 2);
-        trailContext.fill();
-      }
-    }
-
-    function animateSignal(now) {
-      if (!prefersReducedMotion) {
-        phase += 0.022;
-        smoothedPointer += (pointer - smoothedPointer) * 0.08;
-        const pointerMotion = supportsFinePointer ? (now - lastPointerMove < 1200 ? 1 : 0.28) : 0;
-        const panelRect = signalPanel.getBoundingClientRect();
-        const panelCenterY = panelRect.top + panelRect.height / 2;
-        const verticalFactor = supportsFinePointer
-          ? 1 - Math.min(Math.abs(pointerY - panelCenterY) / Math.max(window.innerHeight * 0.82, 1), 1) * 0.55
-          : 0.62;
-
-        signalBars.forEach((bar, index) => {
-          const ratio = index / Math.max(signalBars.length - 1, 1);
-          const distance = Math.abs(ratio - smoothedPointer);
-          const idleWave = Math.sin(phase * 1.3 + ratio * 8.8) * 5.6 + Math.cos(phase * 0.75 + ratio * 5.2) * 3.2;
-          const impulse = Math.sin((ratio - smoothedPointer) * Math.PI * 3.6 - phase * 2.2)
-            * 16
-            * Math.exp(-distance * 8.5)
-            * verticalFactor
-            * pointerMotion;
-          const shift = idleWave + impulse;
-          const stretch = 0.86
-            + Math.cos(phase * 1.1 + ratio * 4.8) * 0.03
-            + Math.exp(-distance * 7) * 0.18 * verticalFactor * pointerMotion;
-          const opacity = 0.62 + Math.exp(-distance * 5) * 0.18 * (0.45 + pointerMotion * 0.55);
-
-          bar.style.transform = "translateY(" + shift.toFixed(2) + "px) scaleY(" + stretch.toFixed(3) + ")";
-          bar.style.opacity = opacity.toFixed(3);
-        });
-      }
-
-      drawTrail(now);
-      requestAnimationFrame(animateSignal);
-    }
-
-    function updateVibe() {
-      vibeText.textContent = vibes[vibeIndex];
-      vibeSwitch.textContent = "Next Vibe / 0" + (vibeIndex + 1);
-    }
-
-    // 用輕量字元亂碼效果替代重型動畫，讓按鈕更有玩味。
-    function scrambleLabel(element) {
-      const target = element.dataset.label;
-      const labelNode = element.querySelector(".action-label");
-      const glyphs = "01/<>+*#";
-      let frame = 0;
-      clearInterval(element._scrambleTimer);
-      element._scrambleTimer = setInterval(() => {
-        const output = target
-          .split("")
-          .map((char, index) => {
-            if (char === " ") {
-              return " ";
-            }
-            if (index < frame / 2) {
-              return char;
-            }
-            return glyphs[Math.floor(Math.random() * glyphs.length)];
-          })
-          .join("");
-        labelNode.textContent = output;
-        frame += 1;
-        if (frame > target.length * 2) {
-          clearInterval(element._scrambleTimer);
-          labelNode.textContent = target;
-        }
-      }, 28);
-    }
-
-    contrastToggle.addEventListener("click", () => {
-      paletteIndex = (paletteIndex + 1) % palettes.length;
-      applyPalette(paletteIndex);
-    });
-
-    vibeSwitch.addEventListener("click", () => {
-      vibeIndex = (vibeIndex + 1) % vibes.length;
-      updateVibe();
-    });
-
-    if (supportsFinePointer) {
-      window.addEventListener("pointermove", (event) => {
-        pointer = clampNumber(event.clientX / window.innerWidth, 0, 1);
-        pointerY = event.clientY;
-        lastPointerMove = performance.now();
-
-        if (trailEnabled) {
-          trailTarget.x = event.clientX;
-          trailTarget.y = event.clientY;
-        }
-      }, { passive: true });
-    }
-
-    heroHead.addEventListener("pointermove", (event) => {
-      const rect = heroHead.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 14;
-      heroHead.style.setProperty("--spark-rotate", x.toFixed(2));
-    });
-
-    heroHead.addEventListener("pointerleave", () => {
-      heroHead.style.setProperty("--spark-rotate", "0");
-    });
-
-    portraitFrame.addEventListener("pointermove", (event) => {
-      const rect = portraitFrame.getBoundingClientRect();
-      const rotateY = ((event.clientX - rect.left) / rect.width - 0.5) * 6;
-      const rotateX = ((event.clientY - rect.top) / rect.height - 0.5) * -6;
-      portraitFrame.style.transform = "rotateX(" + rotateX.toFixed(2) + "deg) rotateY(" + rotateY.toFixed(2) + "deg) translateY(-3px)";
-    });
-
-    portraitFrame.addEventListener("pointerleave", () => {
-      portraitFrame.style.transform = "";
-    });
-
-    actionLinks.forEach((link) => {
-      link.addEventListener("pointerenter", () => scrambleLabel(link));
-      link.addEventListener("focus", () => scrambleLabel(link));
-    });
-
-    if (profilePhoto) {
-      profilePhoto.addEventListener("load", syncPhotoState);
-      profilePhoto.addEventListener("error", syncPhotoState);
-    }
-    window.addEventListener("resize", () => {
-      signalBars = buildSignalBars();
-      resizeTrailLayer();
-      if (trailEnabled) {
-        buildTrailPoints();
-      }
-    });
-
-    applyPalette(paletteIndex);
-    updateVibe();
-    syncPhotoState();
-    signalBars = buildSignalBars();
-    resizeTrailLayer();
-    if (trailEnabled) {
-      buildTrailPoints();
-    }
-    animateSignal(performance.now());
+    renderCards();
+    renderCategoryOptions();
+    renderSources();
+    renderTable();
   </script>
 </body>
 </html>

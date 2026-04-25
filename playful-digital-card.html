@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playful Digital Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@500;700;900&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    :root {
+      --bg: #efe7dc;
+      --ink: #201714;
+      --paper: #fff7ea;
+      --panel: #d97a61;
+      --muted: rgba(32, 23, 20, 0.72);
+      --line: rgba(32, 23, 20, 0.78);
+      --soft-line: rgba(32, 23, 20, 0.11);
+      --noise: rgba(255, 247, 234, 0.22);
+      --shadow: 0 18px 0 rgba(32, 23, 20, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--paper) 18%, transparent), transparent 28%),
+        radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--paper) 16%, transparent), transparent 22%),
+        linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 87%, var(--ink)));
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--soft-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--soft-line) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      opacity: 0.2;
+      mix-blend-mode: multiply;
+    }
+
+    .poster {
+      width: min(1500px, calc(100% - 32px));
+      margin: 16px auto;
+      border: 2px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 94px minmax(0, 1.3fr) minmax(240px, 1fr) 156px;
+      border-bottom: 2px solid var(--line);
+    }
+
+    .topbox {
+      min-height: 94px;
+      padding: 18px 20px;
+      border-right: 2px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: color-mix(in srgb, var(--panel) 88%, var(--paper));
+    }
+
+    .topbox:last-child {
+      border-right: 0;
+    }
+
+    .mark {
+      display: inline-grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      width: 44px;
+      height: 48px;
+    }
+
+    .mark span {
+      background: var(--ink);
+    }
+
+    .top-meta,
+    .top-status,
+    .contrast-toggle {
+      width: 100%;
+      height: 100%;
+    }
+
+    .top-meta,
+    .top-status {
+      display: grid;
+      align-content: center;
+      gap: 10px;
+      justify-items: start;
+    }
+
+    .micro {
+      margin: 0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      line-height: 1.55;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .micro strong {
+      font-weight: 600;
+    }
+
+    .status-copy {
+      margin: 0;
+      font-family: "Noto Sans TC", sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.3;
+      max-width: 32ch;
+    }
+
+    .contrast-toggle {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .contrast-toggle:hover,
+    .contrast-toggle:focus-visible {
+      background: color-mix(in srgb, var(--ink) 94%, transparent);
+      color: var(--paper);
+      outline: none;
+    }
+
+    .signal-panel {
+      height: clamp(160px, 22vw, 280px);
+      border-bottom: 2px solid var(--line);
+      overflow: hidden;
+      position: relative;
+      background:
+        linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, var(--paper)), color-mix(in srgb, var(--panel) 96%, black 4%));
+    }
+
+    .signal-panel::before,
+    .signal-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .signal-panel::before {
+      background:
+        linear-gradient(180deg, transparent 0 12%, color-mix(in srgb, var(--paper) 10%, transparent) 12% 15%, transparent 15%),
+        linear-gradient(180deg, transparent 0 82%, color-mix(in srgb, var(--paper) 8%, transparent) 82% 86%, transparent 86%);
+      mix-blend-mode: screen;
+    }
+
+    .signal-panel::after {
+      background:
+        linear-gradient(90deg, transparent 0 48%, color-mix(in srgb, var(--ink) 5%, transparent) 48% 52%, transparent 52%);
+      mix-blend-mode: multiply;
+    }
+
+    .signal-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0;
+      height: 100%;
+      padding: 0 clamp(12px, 3vw, 24px);
+    }
+
+    .signal-bar {
+      flex: 0 0 2px;
+      width: 2px;
+      height: 74%;
+      background: color-mix(in srgb, var(--ink) 94%, var(--paper) 6%);
+      transform: translateY(0) scaleY(1);
+      transform-origin: center;
+      border-radius: 999px;
+      opacity: 0.72;
+      will-change: transform;
+    }
+
+    .binary-strip {
+      border-bottom: 2px solid var(--line);
+      overflow: hidden;
+      white-space: nowrap;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      background: color-mix(in srgb, var(--panel) 80%, var(--ink) 20%);
+      color: color-mix(in srgb, var(--paper) 28%, var(--ink) 72%);
+    }
+
+    .binary-track {
+      display: inline-block;
+      min-width: 200%;
+      padding: 10px 0 9px;
+      animation: ticker 24s linear infinite;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .portrait-zone,
+    .content-zone {
+      min-width: 0;
+    }
+
+    .portrait-zone {
+      padding: clamp(20px, 3vw, 36px);
+      border-right: 2px solid var(--line);
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .portrait-frame {
+      aspect-ratio: 4 / 5;
+      border: 2px solid var(--line);
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--paper) 18%, transparent), transparent 30%),
+        linear-gradient(180deg, color-mix(in srgb, var(--panel) 64%, var(--ink) 36%), color-mix(in srgb, var(--panel) 56%, var(--ink) 44%));
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+      transform-style: preserve-3d;
+    }
+
+    .portrait-frame:hover {
+      transform: rotate(-2deg) translateY(-6px);
+      box-shadow: 12px 12px 0 rgba(32, 23, 20, 0.12);
+    }
+
+    .portrait-frame::before,
+    .portrait-frame::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .portrait-frame::before {
+      inset: 14px;
+      border: 1px solid color-mix(in srgb, var(--paper) 26%, transparent);
+      clip-path: polygon(0 0, 100% 0, 100% 82%, 84% 100%, 0 100%);
+    }
+
+    .portrait-frame::after {
+      right: 18px;
+      bottom: 18px;
+      width: 70px;
+      aspect-ratio: 1;
+      background: var(--paper);
+      clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+      opacity: 0.56;
+      mix-blend-mode: screen;
+      transform: rotate(18deg);
+    }
+
+    .portrait-frame img,
+    .portrait-fallback {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .portrait-frame img {
+      object-fit: cover;
+      display: none;
+      filter: saturate(0.95) contrast(1.05);
+    }
+
+    .portrait-frame.has-photo img {
+      display: block;
+    }
+
+    .portrait-fallback {
+      display: grid;
+      place-items: center;
+      font-family: "Anton", sans-serif;
+      font-size: clamp(4rem, 13vw, 7rem);
+      color: var(--paper);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .portrait-note,
+    .portrait-path {
+      margin: 0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .portrait-path {
+      word-break: break-all;
+      opacity: 0.86;
+    }
+
+    .content-zone {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+    }
+
+    .hero-head {
+      padding: clamp(22px, 3vw, 36px);
+      border-bottom: 2px solid var(--line);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-head::after {
+      content: "";
+      position: absolute;
+      right: clamp(16px, 3vw, 32px);
+      top: clamp(20px, 4vw, 48px);
+      width: clamp(62px, 9vw, 100px);
+      aspect-ratio: 1;
+      background: var(--ink);
+      clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+      transform: rotate(calc(var(--spark-rotate, 0) * 1deg));
+      transition: transform 220ms ease;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      position: relative;
+      margin: 0;
+      font-size: clamp(3.6rem, 13vw, 10rem);
+      line-height: 0.9;
+      font-weight: 900;
+      letter-spacing: -0.1em;
+      white-space: nowrap;
+    }
+
+    .hero-title::after {
+      content: attr(data-echo);
+      position: absolute;
+      left: 0.04em;
+      top: 0.05em;
+      color: var(--paper);
+      opacity: 0.35;
+      z-index: -1;
+    }
+
+    .subline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 14px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .subline span {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 14%, transparent);
+    }
+
+    .copy-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(230px, 0.75fr);
+      border-bottom: 2px solid var(--line);
+    }
+
+    .intro-panel,
+    .vibe-panel {
+      padding: clamp(20px, 3vw, 32px);
+      min-width: 0;
+    }
+
+    .intro-panel {
+      border-right: 2px solid var(--line);
+    }
+
+    .lead {
+      margin: 0 0 18px;
+      font-size: clamp(1.04rem, 2vw, 1.22rem);
+      line-height: 1.75;
+      max-width: 34ch;
+    }
+
+    .story {
+      margin: 0;
+      max-width: 42ch;
+      font-size: 0.98rem;
+      line-height: 1.9;
+      color: var(--muted);
+    }
+
+    .vibe-panel {
+      display: grid;
+      gap: 18px;
+      align-content: space-between;
+      background: color-mix(in srgb, var(--paper) 12%, transparent);
+    }
+
+    .vibe-label {
+      margin: 0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .vibe-text {
+      margin: 0;
+      font-family: "Anton", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      max-width: 7ch;
+    }
+
+    .vibe-switch {
+      appearance: none;
+      border: 2px solid var(--line);
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px 16px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .vibe-switch:hover,
+    .vibe-switch:focus-visible {
+      transform: translateY(-2px);
+      background: var(--paper);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .links-panel {
+      padding: clamp(20px, 3vw, 34px);
+      border-bottom: 2px solid var(--line);
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .action-link {
+      min-height: 114px;
+      border: 2px solid var(--line);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      padding: 16px 18px;
+      text-decoration: none;
+      color: var(--ink);
+      background: color-mix(in srgb, var(--paper) 14%, transparent);
+      transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-link::after {
+      content: "";
+      position: absolute;
+      inset: auto auto 0 0;
+      width: 100%;
+      height: 0;
+      background: var(--ink);
+      transition: height 180ms ease;
+      z-index: 0;
+    }
+
+    .action-link:hover,
+    .action-link:focus-visible {
+      transform: translate(-4px, -4px);
+      color: var(--paper);
+      outline: none;
+    }
+
+    .action-link:hover::after,
+    .action-link:focus-visible::after {
+      height: 100%;
+    }
+
+    .action-link > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .action-meta,
+    .action-arrow {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .action-label {
+      font-family: "Anton", sans-serif;
+      font-size: clamp(1.55rem, 3vw, 2.3rem);
+      line-height: 1;
+      text-transform: uppercase;
+      word-break: break-word;
+    }
+
+    .footer-bar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      padding: 16px 20px;
+      align-items: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer-bar p {
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .footer-note {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 12%, transparent);
+    }
+
+    .trail-layer {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 4;
+      mix-blend-mode: multiply;
+    }
+
+    @keyframes ticker {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .topbar {
+        grid-template-columns: 94px minmax(0, 1fr) minmax(220px, 1fr);
+      }
+
+      .topbar .topbox:last-child {
+        grid-column: 1 / -1;
+        border-top: 2px solid var(--line);
+      }
+
+      .hero-title {
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .copy-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content-zone {
+        order: 1;
+      }
+
+      .portrait-zone {
+        order: 2;
+        justify-items: start;
+      }
+
+      .portrait-zone,
+      .intro-panel {
+        border-right: 0;
+      }
+
+      .portrait-zone,
+      .hero-head,
+      .intro-panel,
+      .vibe-panel,
+      .links-panel {
+        border-bottom: 2px solid var(--line);
+      }
+
+      .copy-grid {
+        border-bottom: 0;
+      }
+
+      .link-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .poster {
+        width: min(100%, calc(100% - 16px));
+        margin: 8px auto;
+      }
+
+      .topbar {
+        grid-template-columns: 82px 1fr;
+      }
+
+      .topbox {
+        min-height: 82px;
+        padding: 14px;
+      }
+
+      .topbar .topbox:nth-child(3),
+      .topbar .topbox:nth-child(4) {
+        grid-column: 1 / -1;
+      }
+
+      .signal-panel {
+        height: 146px;
+      }
+
+      .signal-bar {
+        flex-basis: 1.5px;
+        width: 1.5px;
+        height: 76%;
+      }
+
+      .portrait-frame {
+        width: min(100%, 320px);
+      }
+
+      .hero-title {
+        font-size: clamp(3rem, 22vw, 5.8rem);
+      }
+
+      .subline {
+        gap: 8px;
+      }
+
+      .subline span {
+        width: 100%;
+      }
+
+      .footer-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="poster" id="poster">
+    <header class="topbar">
+      <div class="topbox" aria-hidden="true">
+        <div class="mark">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="topbox">
+        <div class="top-meta">
+          <p class="micro">Digital Card / Personal Signal</p>
+          <p class="micro"><strong>Signal Mode</strong> / Curious Builder / Motion Lover</p>
+        </div>
+      </div>
+
+      <div class="topbox">
+        <div class="top-status">
+          <p class="status-copy">打桌球、游泳、做小產品，想把有趣的點子做成能長期累積的作品。</p>
+        </div>
+      </div>
+
+      <div class="topbox">
+        <button class="contrast-toggle" id="contrastToggle" type="button">Change Contrast / 01</button>
+      </div>
+    </header>
+
+    <section class="signal-panel" id="signalPanel" aria-hidden="true">
+      <div class="signal-grid" id="signalGrid"></div>
+    </section>
+
+    <div class="binary-strip" aria-hidden="true">
+      <div class="binary-track">
+        01110000 // PING PONG // SWIM // BUILD PRODUCTS // PASSIVE INCOME // DIGITAL CARD // 01111000 // PING PONG // SWIM // BUILD PRODUCTS // PASSIVE INCOME // DIGITAL CARD //
+      </div>
+    </div>
+
+    <main class="hero-grid">
+      <aside class="portrait-zone">
+        <div class="portrait-frame" id="portraitFrame">
+          <div class="portrait-fallback" aria-hidden="true">01</div>
+        </div>
+        <p class="portrait-note">Play hard. Build slowly. Stay curious.</p>
+        <p class="portrait-path">桌球、游泳、小產品實驗，慢慢做出有記憶點的作品。</p>
+      </aside>
+
+      <section class="content-zone">
+        <div class="hero-head" id="heroHead">
+          <p class="eyebrow">Playful Builder / Kinetic Type / Digital Vibe</p>
+          <h1 class="hero-title" data-echo="Digital Card">Digital Card</h1>
+          <div class="subline">
+            <span>Table Tennis</span>
+            <span>Swimming</span>
+            <span>Side Project Builder</span>
+          </div>
+        </div>
+
+        <div class="copy-grid">
+          <div class="intro-panel">
+            <p class="lead">
+              我喜歡把靈感拆成可以動手做的小作品，一邊打磨手感，
+              一邊摸索哪些產品真的能被人打開、記住，甚至慢慢帶來被動收入。
+            </p>
+            <p class="story">
+              這頁不是傳統履歷，而是我的數位名片。
+              它應該有一點衝擊力、一點節奏感，也要保留我正在學習與實驗的狀態。
+            </p>
+          </div>
+
+          <div class="vibe-panel">
+            <div>
+              <p class="vibe-label">Current Vibe</p>
+              <p class="vibe-text" id="vibeText">Fast Hands</p>
+            </div>
+            <button class="vibe-switch" id="vibeSwitch" type="button">Next Vibe / 01</button>
+          </div>
+        </div>
+
+        <div class="links-panel">
+          <div class="link-grid" aria-label="個人連結已移除">
+            <div class="action-link" data-label="Removed">
+              <span class="action-meta">Identity</span>
+              <span class="action-label">Removed</span>
+              <span class="action-arrow">--</span>
+            </div>
+
+            <div class="action-link" data-label="Removed">
+              <span class="action-meta">Social Links</span>
+              <span class="action-label">Removed</span>
+              <span class="action-arrow">--</span>
+            </div>
+
+            <div class="action-link" data-label="Removed">
+              <span class="action-meta">Contact</span>
+              <span class="action-label">Removed</span>
+              <span class="action-arrow">--</span>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer-bar">
+          <p>把靈感做成作品，把作品做出節奏，慢慢累積成自己的風格。</p>
+          <div class="footer-note">Open to new ideas.</div>
+        </footer>
+      </section>
+    </main>
+  </div>
+  <canvas class="trail-layer" id="trailLayer" aria-hidden="true"></canvas>
+
+  <script>
+    const palettes = [
+      {
+        label: "Change Contrast / 01",
+        "--bg": "#efe7dc",
+        "--ink": "#201714",
+        "--paper": "#fff7ea",
+        "--panel": "#d97a61",
+        trail: "32, 23, 20"
+      },
+      {
+        label: "Change Contrast / 02",
+        "--bg": "#e7efe8",
+        "--ink": "#1a231d",
+        "--paper": "#fbfdf8",
+        "--panel": "#8ca48f",
+        trail: "26, 35, 29"
+      },
+      {
+        label: "Change Contrast / 03",
+        "--bg": "#e5ebf0",
+        "--ink": "#1c2730",
+        "--paper": "#f7fbff",
+        "--panel": "#8799b0",
+        trail: "28, 39, 48"
+      }
+    ];
+
+    const vibes = [
+      "Fast Hands",
+      "Calm Laps",
+      "Ship Tiny Products",
+      "Build And Repeat"
+    ];
+
+    const contrastToggle = document.getElementById("contrastToggle");
+    const vibeSwitch = document.getElementById("vibeSwitch");
+    const vibeText = document.getElementById("vibeText");
+    const signalPanel = document.getElementById("signalPanel");
+    const signalGrid = document.getElementById("signalGrid");
+    const heroHead = document.getElementById("heroHead");
+    const profilePhoto = document.getElementById("profilePhoto");
+    const portraitFrame = document.getElementById("portraitFrame");
+    const actionLinks = document.querySelectorAll(".action-link");
+    const prefersReducedMotion = false;
+    const supportsFinePointer =
+      window.matchMedia("(any-pointer: fine)").matches ||
+      window.matchMedia("(hover: hover)").matches ||
+      navigator.maxTouchPoints === 0;
+    const trailLayer = document.getElementById("trailLayer");
+    const trailContext = trailLayer.getContext("2d");
+    const trailEnabled = supportsFinePointer && !prefersReducedMotion;
+
+    let paletteIndex = 0;
+    let vibeIndex = 0;
+    let pointer = 0.5;
+    let smoothedPointer = 0.5;
+    let pointerY = window.innerHeight / 2;
+    let phase = 0;
+    let signalBars = [];
+    let currentTrailColor = palettes[0].trail;
+    let lastPointerMove = 0;
+    let trailStrength = 0;
+    let trailTarget = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2
+    };
+    let trailPoints = [];
+
+    function clampNumber(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function applyPalette(index) {
+      const palette = palettes[index];
+      Object.entries(palette).forEach(([key, value]) => {
+        if (key.startsWith("--")) {
+          document.documentElement.style.setProperty(key, value);
+        }
+      });
+      currentTrailColor = palette.trail;
+      contrastToggle.textContent = palette.label;
+    }
+
+    function syncPhotoState() {
+      if (profilePhoto && profilePhoto.complete && profilePhoto.naturalWidth > 0) {
+        portraitFrame.classList.add("has-photo");
+      } else {
+        portraitFrame.classList.remove("has-photo");
+      }
+    }
+
+    function buildSignalBars() {
+      const count = clampNumber(Math.round(signalPanel.clientWidth / 16), 36, 96);
+      signalGrid.textContent = "";
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < count; i += 1) {
+        const bar = document.createElement("span");
+        bar.className = "signal-bar";
+        bar.dataset.index = i;
+        fragment.appendChild(bar);
+      }
+      signalGrid.appendChild(fragment);
+      return [...signalGrid.querySelectorAll(".signal-bar")];
+    }
+
+    function resizeTrailLayer() {
+      if (!trailEnabled) {
+        trailLayer.style.display = "none";
+        return;
+      }
+
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      trailLayer.width = Math.round(window.innerWidth * ratio);
+      trailLayer.height = Math.round(window.innerHeight * ratio);
+      trailLayer.style.width = window.innerWidth + "px";
+      trailLayer.style.height = window.innerHeight + "px";
+      trailContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function buildTrailPoints() {
+      trailPoints = Array.from({ length: 12 }, () => ({
+        x: trailTarget.x,
+        y: trailTarget.y
+      }));
+    }
+
+    function drawTrail(now) {
+      if (!trailEnabled) {
+        return;
+      }
+
+      trailContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      const isActive = now - lastPointerMove < 900;
+      trailStrength += ((isActive ? 1 : 0) - trailStrength) * 0.08;
+
+      if (trailStrength < 0.02) {
+        return;
+      }
+
+      trailPoints[0].x += (trailTarget.x - trailPoints[0].x) * 0.28;
+      trailPoints[0].y += (trailTarget.y - trailPoints[0].y) * 0.28;
+
+      for (let index = 1; index < trailPoints.length; index += 1) {
+        trailPoints[index].x += (trailPoints[index - 1].x - trailPoints[index].x) * 0.24;
+        trailPoints[index].y += (trailPoints[index - 1].y - trailPoints[index].y) * 0.24;
+      }
+
+      for (let index = trailPoints.length - 1; index >= 0; index -= 1) {
+        const point = trailPoints[index];
+        const progress = 1 - index / trailPoints.length;
+        const radius = 4 + progress * 10;
+        const alpha = (0.012 + progress * 0.07) * trailStrength;
+
+        trailContext.fillStyle = "rgba(" + currentTrailColor + ", " + alpha.toFixed(3) + ")";
+        trailContext.beginPath();
+        trailContext.arc(point.x, point.y, radius, 0, Math.PI * 2);
+        trailContext.fill();
+      }
+    }
+
+    function animateSignal(now) {
+      if (!prefersReducedMotion) {
+        phase += 0.022;
+        smoothedPointer += (pointer - smoothedPointer) * 0.08;
+        const pointerMotion = supportsFinePointer ? (now - lastPointerMove < 1200 ? 1 : 0.28) : 0;
+        const panelRect = signalPanel.getBoundingClientRect();
+        const panelCenterY = panelRect.top + panelRect.height / 2;
+        const verticalFactor = supportsFinePointer
+          ? 1 - Math.min(Math.abs(pointerY - panelCenterY) / Math.max(window.innerHeight * 0.82, 1), 1) * 0.55
+          : 0.62;
+
+        signalBars.forEach((bar, index) => {
+          const ratio = index / Math.max(signalBars.length - 1, 1);
+          const distance = Math.abs(ratio - smoothedPointer);
+          const idleWave = Math.sin(phase * 1.3 + ratio * 8.8) * 5.6 + Math.cos(phase * 0.75 + ratio * 5.2) * 3.2;
+          const impulse = Math.sin((ratio - smoothedPointer) * Math.PI * 3.6 - phase * 2.2)
+            * 16
+            * Math.exp(-distance * 8.5)
+            * verticalFactor
+            * pointerMotion;
+          const shift = idleWave + impulse;
+          const stretch = 0.86
+            + Math.cos(phase * 1.1 + ratio * 4.8) * 0.03
+            + Math.exp(-distance * 7) * 0.18 * verticalFactor * pointerMotion;
+          const opacity = 0.62 + Math.exp(-distance * 5) * 0.18 * (0.45 + pointerMotion * 0.55);
+
+          bar.style.transform = "translateY(" + shift.toFixed(2) + "px) scaleY(" + stretch.toFixed(3) + ")";
+          bar.style.opacity = opacity.toFixed(3);
+        });
+      }
+
+      drawTrail(now);
+      requestAnimationFrame(animateSignal);
+    }
+
+    function updateVibe() {
+      vibeText.textContent = vibes[vibeIndex];
+      vibeSwitch.textContent = "Next Vibe / 0" + (vibeIndex + 1);
+    }
+
+    // 用輕量字元亂碼效果替代重型動畫，讓按鈕更有玩味。
+    function scrambleLabel(element) {
+      const target = element.dataset.label;
+      const labelNode = element.querySelector(".action-label");
+      const glyphs = "01/<>+*#";
+      let frame = 0;
+      clearInterval(element._scrambleTimer);
+      element._scrambleTimer = setInterval(() => {
+        const output = target
+          .split("")
+          .map((char, index) => {
+            if (char === " ") {
+              return " ";
+            }
+            if (index < frame / 2) {
+              return char;
+            }
+            return glyphs[Math.floor(Math.random() * glyphs.length)];
+          })
+          .join("");
+        labelNode.textContent = output;
+        frame += 1;
+        if (frame > target.length * 2) {
+          clearInterval(element._scrambleTimer);
+          labelNode.textContent = target;
+        }
+      }, 28);
+    }
+
+    contrastToggle.addEventListener("click", () => {
+      paletteIndex = (paletteIndex + 1) % palettes.length;
+      applyPalette(paletteIndex);
+    });
+
+    vibeSwitch.addEventListener("click", () => {
+      vibeIndex = (vibeIndex + 1) % vibes.length;
+      updateVibe();
+    });
+
+    if (supportsFinePointer) {
+      window.addEventListener("pointermove", (event) => {
+        pointer = clampNumber(event.clientX / window.innerWidth, 0, 1);
+        pointerY = event.clientY;
+        lastPointerMove = performance.now();
+
+        if (trailEnabled) {
+          trailTarget.x = event.clientX;
+          trailTarget.y = event.clientY;
+        }
+      }, { passive: true });
+    }
+
+    heroHead.addEventListener("pointermove", (event) => {
+      const rect = heroHead.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 14;
+      heroHead.style.setProperty("--spark-rotate", x.toFixed(2));
+    });
+
+    heroHead.addEventListener("pointerleave", () => {
+      heroHead.style.setProperty("--spark-rotate", "0");
+    });
+
+    portraitFrame.addEventListener("pointermove", (event) => {
+      const rect = portraitFrame.getBoundingClientRect();
+      const rotateY = ((event.clientX - rect.left) / rect.width - 0.5) * 6;
+      const rotateX = ((event.clientY - rect.top) / rect.height - 0.5) * -6;
+      portraitFrame.style.transform = "rotateX(" + rotateX.toFixed(2) + "deg) rotateY(" + rotateY.toFixed(2) + "deg) translateY(-3px)";
+    });
+
+    portraitFrame.addEventListener("pointerleave", () => {
+      portraitFrame.style.transform = "";
+    });
+
+    actionLinks.forEach((link) => {
+      link.addEventListener("pointerenter", () => scrambleLabel(link));
+      link.addEventListener("focus", () => scrambleLabel(link));
+    });
+
+    if (profilePhoto) {
+      profilePhoto.addEventListener("load", syncPhotoState);
+      profilePhoto.addEventListener("error", syncPhotoState);
+    }
+    window.addEventListener("resize", () => {
+      signalBars = buildSignalBars();
+      resizeTrailLayer();
+      if (trailEnabled) {
+        buildTrailPoints();
+      }
+    });
+
+    applyPalette(paletteIndex);
+    updateVibe();
+    syncPhotoState();
+    signalBars = buildSignalBars();
+    resizeTrailLayer();
+    if (trailEnabled) {
+      buildTrailPoints();
+    }
+    animateSignal(performance.now());
+  </script>
+</body>
+</html>
