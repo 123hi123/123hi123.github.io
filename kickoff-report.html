@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #0d0f17; }
+    #__dc_root, x-dc { height: 100%; display: block; }
+  </style>
+</helmet>
+
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<!-- ════════ 00 · TITLE (dark) ════════ -->
+<section data-label="Title" data-speaker-notes="啟動會議開場。聽眾是資安專家與研究生，不需科普。本研究屬互動式深度審查範式：一套可量化、可重現的 LLM 漏洞發現方法論。三階段路線：cJSON 可行性（已完成）→ NanoMQ/FlashMQ 泛化 → 資安院實戰。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#1A1E2E;display:flex;flex-direction:column;justify-content:center;padding:0 124px;overflow:hidden;position:relative;">
+  <div style="position:absolute;right:-180px;top:-180px;width:660px;height:660px;border-radius:50%;border:3px solid rgba(226,85,60,0.22);"></div>
+  <div style="position:absolute;right:140px;bottom:-200px;width:460px;height:460px;border-radius:50%;background:rgba(60,111,203,0.10);"></div>
+  <div style="position:relative;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:30px;">
+      <span style="width:34px;height:5px;border-radius:3px;background:#E2553C;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#E2553C;">研究計畫啟動會議 · Research Kickoff</span>
+    </div>
+    <div style="font-size:108px;font-weight:900;line-height:1.02;letter-spacing:-0.02em;color:#F4EFE4;">互動式深度審查</div>
+    <div style="font-size:40px;font-weight:700;color:#C7CCDA;margin-top:18px;line-height:1.3;">一套可量化、可重現的 LLM 漏洞發現方法論</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:25px;font-weight:500;color:#8C93A8;margin-top:20px;letter-spacing:0.01em;">Interactive Deep Review — A Scientific Methodology for LLM-Driven Vulnerability Discovery</div>
+    <div style="display:flex;gap:14px;margin-top:48px;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:600;color:#2E9D63;background:rgba(46,157,99,0.14);border:1.5px solid rgba(46,157,99,0.5);border-radius:999px;padding:9px 22px;">① cJSON 可行性 ✓</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:600;color:#8557C9;background:rgba(133,87,201,0.14);border:1.5px solid rgba(133,87,201,0.5);border-radius:999px;padding:9px 22px;">② NanoMQ / FlashMQ 泛化</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:600;color:#E6A331;background:rgba(230,163,49,0.14);border:1.5px solid rgba(230,163,49,0.5);border-radius:999px;padding:9px 22px;">③ 資安院實戰</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:124px;right:124px;bottom:54px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#6B7287;">
+    <span>Hwang (2026) · ACSAC 2026 submission · cJSON / NanoMQ / NICS</span>
+    <span>2026</span>
+  </div>
+</section>
+
+<!-- ════════ 01 · 方法概覽 (light) ════════ -->
+<section data-label="方法概覽" data-speaker-notes="四種傳統方法，聽眾都懂，各一句話定位即可：靜態分析誤報高；Fuzzing 探索輸入空間、無法構造語意條件；符號執行路徑爆炸；人工審計不可擴展。重點在限制——這些限制正是 LLM 想補的位置。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#FBF8F0;display:flex;flex-direction:column;padding:78px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#E2553C;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#E2553C;">Part 1 · 文獻探討</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#15130F;">軟體漏洞發現方法概覽</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#6B6356;margin-top:10px;">Four established approaches — and where each one stops</div>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;align-items:stretch;margin-top:46px;">
+    <div style="background:#fff;border:2px solid #E4DCCB;border-top:7px solid #3C6FCB;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700;color:#3C6FCB;">01</div>
+      <div style="font-size:32px;font-weight:800;color:#15130F;margin-top:14px;">靜態分析</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#6B6356;margin-top:5px;">Static Analysis</div>
+      <div style="font-size:21px;color:#3a352c;margin-top:16px;line-height:1.5;">不執行程式，直接對原始碼比對規則。Coverity · CodeQL · Semgrep</div>
+      <div style="margin-top:auto;padding-top:18px;"><span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#E2553C;background:#FBE7E2;border-radius:999px;padding:8px 16px;">誤報高 30–70%</span></div>
+    </div>
+    <div style="background:#fff;border:2px solid #E4DCCB;border-top:7px solid #2E9D63;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700;color:#2E9D63;">02</div>
+      <div style="font-size:32px;font-weight:800;color:#15130F;margin-top:14px;">模糊測試</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#6B6356;margin-top:5px;">Fuzzing</div>
+      <div style="font-size:21px;color:#3a352c;margin-top:16px;line-height:1.5;">大量輸入觸發異常，崩潰即真實。AFL++ · libFuzzer · syzkaller</div>
+      <div style="margin-top:auto;padding-top:18px;"><span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#E2553C;background:#FBE7E2;border-radius:999px;padding:8px 16px;">無法構造語意條件</span></div>
+    </div>
+    <div style="background:#fff;border:2px solid #E4DCCB;border-top:7px solid #E6A331;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700;color:#E6A331;">03</div>
+      <div style="font-size:32px;font-weight:800;color:#15130F;margin-top:14px;">符號執行</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#6B6356;margin-top:5px;">Symbolic Execution</div>
+      <div style="font-size:21px;color:#3a352c;margin-top:16px;line-height:1.5;">符號值沿路徑解約束，生成精確輸入。KLEE · angr · S2E</div>
+      <div style="margin-top:auto;padding-top:18px;"><span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#E2553C;background:#FBE7E2;border-radius:999px;padding:8px 16px;">路徑爆炸</span></div>
+    </div>
+    <div style="background:#fff;border:2px solid #E4DCCB;border-top:7px solid #8557C9;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700;color:#8557C9;">04</div>
+      <div style="font-size:32px;font-weight:800;color:#15130F;margin-top:14px;">人工審計</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#6B6356;margin-top:5px;">Manual Code Review</div>
+      <div style="font-size:21px;color:#3a352c;margin-top:16px;line-height:1.5;">專家逐函式建立心智模型、推理深層漏洞。精確、可達語意層級</div>
+      <div style="margin-top:auto;padding-top:18px;"><span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#E2553C;background:#FBE7E2;border-radius:999px;padding:8px 16px;">不可擴展</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ 02 · 三種範式 (light, 3-col) ════════ -->
+<section data-label="三種範式" data-speaker-notes="LLM 驅動漏洞發現分三種範式。範式一增強 Fuzzing，仍是輸入空間探索。範式二自主代理，精確度低、收斂淺層。範式三互動式深度審查——人引導 LLM 分階段審查，可語意推理、可量化、可重現，這就是本研究所在。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#FBF8F0;display:flex;flex-direction:column;padding:78px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#E2553C;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#E2553C;">Part 1 · 文獻探討</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#15130F;">LLM 驅動漏洞發現：三種範式</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#6B6356;margin-top:10px;">Three paradigms — LLM augments the fuzzer, the agent, or the reviewer</div>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1.08fr;gap:24px;align-items:stretch;margin-top:42px;">
+    <!-- 範式一 -->
+    <div style="background:#fff;border:2px solid #E4DCCB;border-radius:20px;padding:0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="background:#3C6FCB;color:#fff;padding:22px 28px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;opacity:0.85;letter-spacing:0.04em;">範式一 · Paradigm I</div>
+        <div style="font-size:30px;font-weight:800;margin-top:6px;">LLM 增強 Fuzzing</div>
+      </div>
+      <div style="padding:26px 28px;display:flex;flex-direction:column;flex:1;">
+        <div style="font-size:21px;color:#3a352c;line-height:1.5;">LLM 生成種子 / harness / 語法感知輸入，由 fuzzer 執行探索。</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#3C6FCB;font-weight:600;margin-top:18px;line-height:1.8;">Deng · ISSTA 2023<br/>Meng · NDSS 2024<br/>Lyu · CCS 2024</div>
+        <div style="margin-top:auto;padding-top:20px;"><div style="font-size:19px;color:#8a4434;background:#FBE7E2;border-radius:12px;padding:14px 16px;line-height:1.45;"><b style="color:#E2553C;">限制 ·</b> 仍是輸入空間探索，對語意條件無引導信號</div></div>
+      </div>
+    </div>
+    <!-- 範式二 -->
+    <div style="background:#fff;border:2px solid #E4DCCB;border-radius:20px;padding:0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="background:#8557C9;color:#fff;padding:22px 28px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;opacity:0.85;letter-spacing:0.04em;">範式二 · Paradigm II</div>
+        <div style="font-size:30px;font-weight:800;margin-top:6px;">自主 LLM 代理</div>
+      </div>
+      <div style="padding:26px 28px;display:flex;flex-direction:column;flex:1;">
+        <div style="font-size:21px;color:#3a352c;line-height:1.5;">把原始碼交給 LLM，在迴圈中自主讀碼、回報發現。</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#8557C9;font-weight:600;margin-top:18px;line-height:1.8;">Sheng · ACM CSUR 2025<br/>Ullah · IEEE S&amp;P 2024</div>
+        <div style="margin-top:auto;padding-top:20px;"><div style="font-size:19px;color:#8a4434;background:#FBE7E2;border-radius:12px;padding:14px 16px;line-height:1.45;"><b style="color:#E2553C;">限制 ·</b> 精確度低，傾向標記表面模式、收斂於淺層漏洞</div></div>
+      </div>
+    </div>
+    <!-- 範式三 highlighted -->
+    <div style="background:#fff;border:2.5px solid #E6A331;border-radius:20px;padding:0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 38px rgba(230,163,49,0.22);position:relative;">
+      <div style="position:absolute;top:18px;right:18px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:#15130F;background:#fff;border:2px solid #E6A331;border-radius:999px;padding:5px 14px;">本研究</div>
+      <div style="background:#E6A331;color:#fff;padding:22px 28px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;opacity:0.9;letter-spacing:0.04em;">範式三 · Paradigm III</div>
+        <div style="font-size:30px;font-weight:800;margin-top:6px;">互動式深度審查</div>
+      </div>
+      <div style="padding:26px 28px;display:flex;flex-direction:column;flex:1;">
+        <div style="font-size:21px;color:#3a352c;line-height:1.5;">人類設計結構化多階段提示，引導 LLM 先理解、再推理、最後驗證。</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#9A6B12;font-weight:600;margin-top:18px;line-height:1.8;">Carlini · 2026<br/>Glasswing · 2026<br/>Hwang · 2026</div>
+        <div style="margin-top:auto;padding-top:20px;"><div style="font-size:19px;color:#2E6b48;background:#E7F5EE;border-radius:12px;padding:14px 16px;line-height:1.45;"><b style="color:#2E9D63;">優勢 ·</b> 語意推理、可量化、可重現</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ 03 · DARPA / 前沿 (dark) ════════ -->
+<section data-label="前沿進展" data-speaker-notes="能力已經到了。AIxCC 決賽 86% 辨識率、18 個 zero-day、每任務 152 美元。Carlini 用 Claude Code + bash 迴圈挖出 Linux 23 年 NFS heap overflow。Glasswing 的 Mythos Preview 找到 OpenBSD 27 年、FreeBSD 17 年漏洞。關鍵訊息：能力到了，但缺系統化方法論與受控實驗——這正是本研究的切入點。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#1A1E2E;display:flex;flex-direction:column;padding:78px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#E2553C;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#E2553C;">Part 1 · 文獻探討</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#F4EFE4;">DARPA AIxCC 與前沿進展</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#8C93A8;margin-top:10px;">The capability has arrived — at scale and at the frontier</div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:22px;margin-top:38px;">
+    <div style="display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:22px;flex:1;">
+      <!-- AIxCC -->
+      <div style="background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px 30px;display:flex;flex-direction:column;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;color:#3C6FCB;letter-spacing:0.04em;">DARPA AIxCC · 決賽 2025.8</div>
+        <div style="font-size:24px;font-weight:700;color:#F4EFE4;margin-top:8px;">7 隊自主 CRS · 143 小時全自主</div>
+        <div style="display:flex;gap:14px;margin-top:auto;padding-top:24px;">
+          <div><div style="font-size:52px;font-weight:900;color:#3C6FCB;line-height:1;">86%</div><div style="font-size:17px;color:#8C93A8;margin-top:6px;">漏洞辨識率</div></div>
+          <div><div style="font-size:52px;font-weight:900;color:#3C6FCB;line-height:1;">18</div><div style="font-size:17px;color:#8C93A8;margin-top:6px;">真實 zero-day</div></div>
+          <div><div style="font-size:52px;font-weight:900;color:#3C6FCB;line-height:1;">$152</div><div style="font-size:17px;color:#8C93A8;margin-top:6px;">平均每任務</div></div>
+        </div>
+      </div>
+      <!-- Carlini -->
+      <div style="background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px 30px;display:flex;flex-direction:column;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;color:#E2553C;letter-spacing:0.04em;">Carlini · 2026</div>
+        <div style="font-size:24px;font-weight:700;color:#F4EFE4;margin-top:8px;line-height:1.32;">Claude Code + bash 迴圈逐檔審查</div>
+        <div style="margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:18px;color:#E6A331;background:rgba(230,163,49,0.12);border-radius:10px;padding:12px 14px;line-height:1.4;">Linux kernel · 潛伏 23 年<br/>NFS heap overflow · CVE-2026-31402</div>
+        <div style="margin-top:auto;padding-top:18px;font-size:20px;color:#C7CCDA;">5 個核心漏洞已確認 · 數百個待驗證</div>
+      </div>
+      <!-- Glasswing -->
+      <div style="background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px 30px;display:flex;flex-direction:column;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;color:#8557C9;letter-spacing:0.04em;">Anthropic Glasswing · 2026</div>
+        <div style="font-size:24px;font-weight:700;color:#F4EFE4;margin-top:8px;line-height:1.32;">Claude Mythos Preview 自主發現</div>
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:9px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#C7CCDA;"><span style="color:#8557C9;font-weight:700;">OpenBSD</span> · 27 年 遠端 DoS</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#C7CCDA;"><span style="color:#8557C9;font-weight:700;">FFmpeg</span> · 16 年 解碼器漏洞</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#C7CCDA;"><span style="color:#8557C9;font-weight:700;">FreeBSD</span> · 17 年 NFS RCE</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#E2553C;border-radius:18px;padding:24px 36px;display:flex;align-items:center;gap:22px;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;color:rgba(255,255,255,0.85);letter-spacing:0.06em;white-space:nowrap;">關鍵訊息 · KEY MESSAGE</span>
+      <span style="font-size:30px;font-weight:800;color:#fff;line-height:1.3;">能力已經到了 —— 但缺乏系統化的方法論與受控實驗。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ 04 · 對比與定位 (light, table) ════════ -->
+<section data-label="對比定位" data-speaker-notes="把各方法攤在五個維度上對比。互動式深度審查（最右欄、本研究）在發現深度與語意推理上勝出，代價是可擴展性低、人在迴圈中。本研究定位：比 Carlini 更系統化（有受控實驗與量化），比 Glasswing 更可及（用普通訂閱的 Claude Opus）。核心貢獻是把方法論從展示提升為科學。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#FBF8F0;display:flex;flex-direction:column;padding:74px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#E2553C;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#E2553C;">Part 1 · 文獻探討</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#15130F;">對比分析與本研究定位</div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:24px;margin-top:24px;">
+    <div style="background:#fff;border:2px solid #E4DCCB;border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(33,30,24,0.07);">
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.1fr 1.2fr 1.55fr;background:#15130F;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;">
+        <div style="padding:16px 22px;">維度</div>
+        <div style="padding:16px 14px;text-align:center;">傳統 Fuzzing</div>
+        <div style="padding:16px 14px;text-align:center;">靜態分析</div>
+        <div style="padding:16px 14px;text-align:center;">自主 LLM 代理</div>
+        <div style="padding:16px 14px;text-align:center;">LLM 增強 Fuzzing</div>
+        <div style="padding:16px 16px;text-align:center;background:#E6A331;color:#15130F;font-weight:700;">互動式深度審查 ★</div>
+      </div>
+      <!-- rows -->
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.1fr 1.2fr 1.55fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:16px 22px;font-size:21px;font-weight:700;color:#15130F;">發現深度</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">淺層</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">中等</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">淺層</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">中等</div>
+        <div style="padding:16px 16px;text-align:center;font-size:20px;font-weight:800;color:#2E9D63;background:#FBEFD4;">深層 · 語意推理</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.1fr 1.2fr 1.55fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:16px 22px;font-size:21px;font-weight:700;color:#15130F;">誤報率</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">~0%</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#E2553C;font-weight:700;">高 30–70%</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#E2553C;font-weight:700;">高</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">低</div>
+        <div style="padding:16px 16px;text-align:center;font-size:20px;font-weight:800;color:#15130F;background:#FBEFD4;">可量化</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.1fr 1.2fr 1.55fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:16px 22px;font-size:21px;font-weight:700;color:#15130F;">可擴展性</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#2E9D63;font-weight:700;">高</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#2E9D63;font-weight:700;">高</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#2E9D63;font-weight:700;">高</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">中等</div>
+        <div style="padding:16px 16px;text-align:center;font-size:20px;font-weight:800;color:#E2553C;background:#FBEFD4;">低 · 人在迴圈</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.1fr 1.2fr 1.55fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:16px 22px;font-size:21px;font-weight:700;color:#15130F;">語意推理</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">無</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">有限</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">有限</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">有限</div>
+        <div style="padding:16px 16px;text-align:center;font-size:20px;font-weight:800;color:#2E9D63;background:#FBEFD4;">強 · 跨函式</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.1fr 1.2fr 1.55fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:16px 22px;font-size:21px;font-weight:700;color:#15130F;">可重現性</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#2E9D63;font-weight:700;">高</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#2E9D63;font-weight:700;">高</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#E2553C;font-weight:700;">低</div>
+        <div style="padding:16px 14px;text-align:center;font-size:20px;color:#6B6356;">中等</div>
+        <div style="padding:16px 16px;text-align:center;font-size:20px;font-weight:800;color:#15130F;background:#FBEFD4;">可控 · 受控實驗</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;align-items:stretch;">
+      <div style="flex:1;background:#15130F;border-radius:16px;padding:20px 28px;display:flex;align-items:center;gap:18px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#E6A331;letter-spacing:0.06em;white-space:nowrap;">本研究定位</span>
+        <span style="font-size:23px;font-weight:700;color:#F4EFE4;line-height:1.35;">比 Carlini 更<b style="color:#E6A331;">系統化</b>，比 Glasswing 更<b style="color:#E6A331;">可及</b> —— 將方法論從「展示」提升為「科學」。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ 05 · 三階段協議 (dark) ════════ -->
+<section data-label="三階段協議" data-speaker-notes="方法論核心：三階段盲測協議（論文 Figure 1）。Phase 1 建心智模型、禁談漏洞；Phase 2 生成假說、加引導；Phase 3 寫 PoC 用 ASAN 驗證。階段之間有人類審查的閘門。強調：方法論與語言相關——以 C 為目標，提示詞內含 C 漏洞模式（記憶體所有權、free/malloc 配對、指標別名）。換語言需換提示詞。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#1A1E2E;display:flex;flex-direction:column;padding:78px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#3C6FCB;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#3C6FCB;">Part 2 · 方法論 · cJSON</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#F4EFE4;">三階段盲測協議</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#8C93A8;margin-top:10px;">Three-Phase Blind Protocol · paper Fig. 1 — understand → hypothesize → verify</div>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:14px;margin-top:18px;">
+    <div style="flex:1;background:rgba(60,111,203,0.1);border:2.5px solid #3C6FCB;border-radius:24px;padding:32px 30px;align-self:stretch;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3C6FCB;letter-spacing:0.04em;">Phase 1</div>
+      <div style="font-size:38px;font-weight:900;color:#F4EFE4;margin-top:10px;">心智模型建構</div>
+      <div style="display:inline-block;align-self:flex-start;margin-top:14px;font-size:20px;font-weight:700;color:#fff;background:#3C6FCB;border-radius:999px;padding:6px 20px;">理解 understand</div>
+      <div style="font-size:20px;color:#C7CCDA;margin-top:auto;padding-top:22px;line-height:1.5;">完整理解程式「預期該怎麼運作」，標出每個函式的記憶體所有權與釋放點。<b style="color:#F4EFE4;">禁止談漏洞。</b></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;color:#6B7287;">⟫</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#6B7287;">閘門</div>
+    </div>
+    <div style="flex:1;background:rgba(230,163,49,0.1);border:2.5px solid #E6A331;border-radius:24px;padding:32px 30px;align-self:stretch;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#E6A331;letter-spacing:0.04em;">Phase 2</div>
+      <div style="font-size:38px;font-weight:900;color:#F4EFE4;margin-top:10px;">假說生成</div>
+      <div style="display:inline-block;align-self:flex-start;margin-top:14px;font-size:20px;font-weight:700;color:#fff;background:#E6A331;border-radius:999px;padding:6px 20px;">推理 hypothesize</div>
+      <div style="font-size:20px;color:#C7CCDA;margin-top:auto;padding-top:22px;line-height:1.5;">基於心智模型生成漏洞假說，並施以<b style="color:#F4EFE4;">通用引導（nudge）</b>—— 例如別名模式檢查。</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;color:#6B7287;">⟫</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#6B7287;">閘門</div>
+    </div>
+    <div style="flex:1;background:rgba(46,157,99,0.1);border:2.5px solid #2E9D63;border-radius:24px;padding:32px 30px;align-self:stretch;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#2E9D63;letter-spacing:0.04em;">Phase 3</div>
+      <div style="font-size:38px;font-weight:900;color:#F4EFE4;margin-top:10px;">ASAN 驗證</div>
+      <div style="display:inline-block;align-self:flex-start;margin-top:14px;font-size:20px;font-weight:700;color:#fff;background:#2E9D63;border-radius:999px;padding:6px 20px;">驗證 verify</div>
+      <div style="font-size:20px;color:#C7CCDA;margin-top:auto;padding-top:22px;line-height:1.5;">為每個假說寫觸發程式，用 ASAN 編譯執行。<b style="color:#F4EFE4;">AI 無法假裝崩潰</b>—— 誠實性錨點。</div>
+    </div>
+  </div>
+  <div style="margin-top:24px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.12);border-left:6px solid #3C6FCB;border-radius:14px;padding:20px 28px;display:flex;align-items:center;gap:20px;">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#3C6FCB;letter-spacing:0.04em;white-space:nowrap;">語言相關性</span>
+    <span style="font-size:22px;color:#E6E2D6;line-height:1.4;">提示詞內含 C 語言漏洞模式（記憶體所有權、<span style="font-family:'JetBrains Mono',monospace;">free/malloc</span> 配對、指標別名）。<b style="color:#F4EFE4;">換語言 → 換提示詞。</b></span>
+  </div>
+</section>
+
+<!-- ════════ 06 · 2×2 矩陣 (light, table) ════════ -->
+<section data-label="2×2 矩陣" data-speaker-notes="實驗設計（論文 Table I）：五次執行，變化兩個變量——原始碼版本（有漏洞 v1.7.3 vs 已修復 master）× 提示變體（基線 vs 加別名引導）。Run 4、5 是負面控制。右側是別名引導的原文，刻意通用：不提函式名、不提 CVE、不提 UAF。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#FBF8F0;display:flex;flex-direction:column;padding:74px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#3C6FCB;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#3C6FCB;">Part 2 · 方法論 · cJSON</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#15130F;">實驗設計：2 × 2 消融矩陣</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#6B6356;margin-top:10px;">Five runs · vary source version × prompt · paper Table I</div>
+  </div>
+  <div style="flex:1;display:flex;gap:34px;align-items:center;margin-top:30px;">
+    <div style="flex:1.35;background:#fff;border:2px solid #E4DCCB;border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(33,30,24,0.07);">
+      <div style="display:grid;grid-template-columns:0.9fr 1.7fr 1.5fr 1.7fr;background:#15130F;color:#fff;font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:600;">
+        <div style="padding:16px 22px;">Run</div>
+        <div style="padding:16px 16px;">原始碼</div>
+        <div style="padding:16px 16px;">提示</div>
+        <div style="padding:16px 16px;">目的</div>
+      </div>
+      <div style="display:grid;grid-template-columns:0.9fr 1.7fr 1.5fr 1.7fr;border-top:1px solid #E4DCCB;border-left:6px solid #6B6356;align-items:center;">
+        <div style="padding:16px 22px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#15130F;">Run 1</div>
+        <div style="padding:16px 16px;font-size:20px;color:#3a352c;">v1.7.3 有漏洞</div>
+        <div style="padding:16px 16px;font-size:20px;color:#6B6356;">基線</div>
+        <div style="padding:16px 16px;font-size:20px;color:#6B6356;">基線</div>
+      </div>
+      <div style="display:grid;grid-template-columns:0.9fr 1.7fr 1.5fr 1.7fr;border-top:1px solid #E4DCCB;border-left:6px solid #6B6356;align-items:center;">
+        <div style="padding:16px 22px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#15130F;">Run 2</div>
+        <div style="padding:16px 16px;font-size:20px;color:#3a352c;">v1.7.3 有漏洞</div>
+        <div style="padding:16px 16px;font-size:20px;color:#6B6356;">基線</div>
+        <div style="padding:16px 16px;font-size:20px;color:#6B6356;">環境穩健性</div>
+      </div>
+      <div style="display:grid;grid-template-columns:0.9fr 1.7fr 1.5fr 1.7fr;border-top:1px solid #E4DCCB;border-left:6px solid #E6A331;align-items:center;background:#FBEFD4;">
+        <div style="padding:16px 22px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#15130F;">Run 3</div>
+        <div style="padding:16px 16px;font-size:20px;color:#3a352c;">v1.7.3 有漏洞</div>
+        <div style="padding:16px 16px;font-size:20px;font-weight:800;color:#9A6B12;">＋ 別名引導</div>
+        <div style="padding:16px 16px;font-size:20px;color:#9A6B12;font-weight:700;">測試引導效果</div>
+      </div>
+      <div style="display:grid;grid-template-columns:0.9fr 1.7fr 1.5fr 1.7fr;border-top:1px solid #E4DCCB;border-left:6px solid #2E9D63;align-items:center;">
+        <div style="padding:16px 22px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#15130F;">Run 4</div>
+        <div style="padding:16px 16px;font-size:20px;color:#2E6b48;font-weight:700;">master 已修復</div>
+        <div style="padding:16px 16px;font-size:20px;color:#3a352c;">＋ 別名引導</div>
+        <div style="padding:16px 16px;font-size:20px;color:#2E9D63;font-weight:700;">負面控制</div>
+      </div>
+      <div style="display:grid;grid-template-columns:0.9fr 1.7fr 1.5fr 1.7fr;border-top:1px solid #E4DCCB;border-left:6px solid #2E9D63;align-items:center;">
+        <div style="padding:16px 22px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#15130F;">Run 5</div>
+        <div style="padding:16px 16px;font-size:20px;color:#2E6b48;font-weight:700;">master 已修復</div>
+        <div style="padding:16px 16px;font-size:20px;color:#3a352c;">基線</div>
+        <div style="padding:16px 16px;font-size:20px;color:#2E9D63;font-weight:700;">負面控制</div>
+      </div>
+    </div>
+    <div style="flex:1;align-self:stretch;display:flex;flex-direction:column;justify-content:center;">
+      <div style="background:#15130F;border-radius:20px;padding:30px 32px;box-shadow:0 16px 40px rgba(0,0,0,0.18);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#E6A331;font-weight:700;letter-spacing:0.06em;margin-bottom:16px;">＋ ALIASING NUDGE · 別名引導原文</div>
+        <div style="font-size:25px;line-height:1.6;color:#F4EFE4;">「對每個『先釋放一個指標、再把呼叫者輸入複製進去』的模式，檢查那個輸入<b style="color:#E6A331;">是否就是即將被釋放的記憶體</b>。」</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#C7CCDA;border:1.5px solid rgba(255,255,255,0.28);border-radius:999px;padding:6px 16px;">不提函式名</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#C7CCDA;border:1.5px solid rgba(255,255,255,0.28);border-radius:999px;padding:6px 16px;">不提 UAF</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#C7CCDA;border:1.5px solid rgba(255,255,255,0.28);border-radius:999px;padding:6px 16px;">不提 CVE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ 07 · 已知 CVE 重新發現 (light, table) ════════ -->
+<section data-label="已知CVE" data-speaker-notes="論文 Table III：5 個已知 cJSON CVE 跨執行穩定地被獨立重新發現（在有漏洞的 v1.7.3 上）。在已修復的 master 上，這些全部正確顯示為 fixed——這證明 LLM 在讀程式碼、推理，而不是背 CVE 答案。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#FBF8F0;display:flex;flex-direction:column;padding:74px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#3C6FCB;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#3C6FCB;">Part 2 · 方法論 · cJSON</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#15130F;">已知 CVE 跨執行穩定重新發現</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#6B6356;margin-top:10px;">5 known CVEs re-discovered on v1.7.3 · all read as fixed on master · paper Table III</div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;margin-top:18px;">
+    <div style="background:#fff;border:2px solid #E4DCCB;border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(33,30,24,0.07);">
+      <div style="display:grid;grid-template-columns:1.8fr 1.7fr 1.6fr 1.4fr;background:#15130F;color:#fff;font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:600;">
+        <div style="padding:17px 24px;">CVE</div>
+        <div style="padding:17px 16px;">漏洞類型</div>
+        <div style="padding:17px 16px;">v1.7.3 (有漏洞)</div>
+        <div style="padding:17px 16px;">master (已修復)</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.8fr 1.7fr 1.6fr 1.4fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:17px 24px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#E2553C;">CVE-2018-1000217</div>
+        <div style="padding:17px 16px;font-size:21px;color:#3a352c;">aliased use-after-free</div>
+        <div style="padding:17px 16px;font-size:20px;color:#2E9D63;font-weight:700;">✓ 重新發現</div>
+        <div style="padding:17px 16px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#6B6356;">fixed</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.8fr 1.7fr 1.6fr 1.4fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:17px 24px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#E6A331;">CVE-2019-11834</div>
+        <div style="padding:17px 16px;font-size:21px;color:#3a352c;">out-of-bounds read</div>
+        <div style="padding:17px 16px;font-size:20px;color:#2E9D63;font-weight:700;">✓ 重新發現</div>
+        <div style="padding:17px 16px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#6B6356;">fixed</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.8fr 1.7fr 1.6fr 1.4fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:17px 24px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#E6A331;">CVE-2019-11835</div>
+        <div style="padding:17px 16px;font-size:21px;color:#3a352c;">out-of-bounds read</div>
+        <div style="padding:17px 16px;font-size:20px;color:#2E9D63;font-weight:700;">✓ 重新發現</div>
+        <div style="padding:17px 16px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#6B6356;">fixed</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.8fr 1.7fr 1.6fr 1.4fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:17px 24px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3C6FCB;">CVE-2019-1010239</div>
+        <div style="padding:17px 16px;font-size:21px;color:#3a352c;">NULL dereference</div>
+        <div style="padding:17px 16px;font-size:20px;color:#2E9D63;font-weight:700;">✓ 重新發現</div>
+        <div style="padding:17px 16px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#6B6356;">fixed</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.8fr 1.7fr 1.6fr 1.4fr;border-top:1px solid #E4DCCB;align-items:center;">
+        <div style="padding:17px 24px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#3C6FCB;">CVE-2023-50471</div>
+        <div style="padding:17px 16px;font-size:21px;color:#3a352c;">NULL dereference</div>
+        <div style="padding:17px 16px;font-size:20px;color:#2E9D63;font-weight:700;">✓ 重新發現</div>
+        <div style="padding:17px 16px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#6B6356;">fixed</div>
+      </div>
+    </div>
+    <div style="background:#E7F5EE;border:1.5px solid #2E9D63;border-radius:14px;padding:18px 28px;display:flex;align-items:center;gap:18px;">
+      <span style="font-size:30px;">✓</span>
+      <span style="font-size:23px;font-weight:700;color:#2E6b48;line-height:1.4;">master 上全部正確顯示為 <span style="font-family:'JetBrains Mono',monospace;">fixed</span> —— 證明在「讀程式碼」，而非「背答案」。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ 08 · 新 CVE 候選 (dark) ════════ -->
+<section data-label="新CVE候選" data-speaker-notes="論文 Table IV：除了重新發現已知漏洞，還找出 5 個全新的 CVE 候選，分兩家族。Family I 別名兄弟（由引導觸發）：replace_item_in_object 與 AddItemToObjectCS，CVSS 8.4。Family II apply_patch 家族（基線即發現）：三個釋放錯誤，CVSS 6.8–7.7。已於 2026-05-22 負責任揭露。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#1A1E2E;display:flex;flex-direction:column;padding:78px 104px;overflow:hidden;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+    <div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+        <span style="width:32px;height:5px;border-radius:3px;background:#3C6FCB;"></span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#3C6FCB;">Part 2 · 方法論 · cJSON</span>
+      </div>
+      <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#F4EFE4;">新發現的 5 個 CVE 候選</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#8C93A8;margin-top:10px;">Five novel candidates · paper Table IV</div>
+    </div>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:600;color:#2E9D63;background:rgba(46,157,99,0.14);border:1.5px solid rgba(46,157,99,0.5);border-radius:999px;padding:9px 20px;white-space:nowrap;">負責任揭露 · 2026-05-22</span>
+  </div>
+  <div style="flex:1;display:flex;gap:26px;margin-top:36px;">
+    <!-- Family I -->
+    <div style="flex:1;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;color:#E6A331;letter-spacing:0.03em;margin-bottom:16px;">Family I · 別名兄弟 <span style="color:#8C93A8;font-weight:500;">(引導觸發)</span></div>
+      <div style="display:flex;flex-direction:column;gap:16px;flex:1;">
+        <div style="background:rgba(230,163,49,0.08);border:1.5px solid rgba(230,163,49,0.4);border-left:6px solid #E6A331;border-radius:16px;padding:24px 28px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-family:'JetBrains Mono',monospace;font-size:23px;font-weight:700;color:#F4EFE4;">replace_item_in_object</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#15130F;background:#E6A331;border-radius:8px;padding:5px 14px;">CVSS 8.4</span></div>
+          <div style="font-size:21px;color:#C7CCDA;margin-top:10px;">use-after-free · 別名鍵名先釋放後複製</div>
+        </div>
+        <div style="background:rgba(230,163,49,0.08);border:1.5px solid rgba(230,163,49,0.4);border-left:6px solid #E6A331;border-radius:16px;padding:24px 28px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-family:'JetBrains Mono',monospace;font-size:23px;font-weight:700;color:#F4EFE4;">cJSON_AddItemToObjectCS</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#15130F;background:#E6A331;border-radius:8px;padding:5px 14px;">CVSS 8.4</span></div>
+          <div style="font-size:21px;color:#C7CCDA;margin-top:10px;">靜默懸空指標 · dangling pointer UAF</div>
+        </div>
+      </div>
+    </div>
+    <!-- Family II -->
+    <div style="flex:1.15;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;color:#2E9D63;letter-spacing:0.03em;margin-bottom:16px;">Family II · apply_patch 家族 <span style="color:#8C93A8;font-weight:500;">(基線發現)</span></div>
+      <div style="display:flex;flex-direction:column;gap:13px;flex:1;">
+        <div style="background:rgba(46,157,99,0.08);border:1.5px solid rgba(46,157,99,0.4);border-left:6px solid #2E9D63;border-radius:16px;padding:20px 28px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:23px;font-weight:700;color:#F4EFE4;">忽略 StringIsConst</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#fff;background:#2E9D63;border-radius:8px;padding:5px 14px;">CVSS 7.7</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:19px;color:#C7CCDA;margin-top:8px;">釋放 .rodata 字串</div>
+        </div>
+        <div style="background:rgba(46,157,99,0.08);border:1.5px solid rgba(46,157,99,0.4);border-left:6px solid #2E9D63;border-radius:16px;padding:20px 28px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:23px;font-weight:700;color:#F4EFE4;">忽略 IsReference</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#fff;background:#2E9D63;border-radius:8px;padding:5px 14px;">CVSS 7.4</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:19px;color:#C7CCDA;margin-top:8px;">釋放借用的子樹</div>
+        </div>
+        <div style="background:rgba(46,157,99,0.08);border:1.5px solid rgba(46,157,99,0.4);border-left:6px solid #2E9D63;border-radius:16px;padding:20px 28px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:23px;font-weight:700;color:#F4EFE4;">memcpy 覆蓋指標</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#fff;background:#2E9D63;border-radius:8px;padding:5px 14px;">CVSS 6.8</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:19px;color:#C7CCDA;margin-top:8px;">破壞父節點子鏈</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ 09 · 關鍵發現 (dark) ════════ -->
+<section data-label="關鍵發現" data-speaker-notes="四個關鍵發現。(1) 誤報率與程式碼成熟度成反比——在已修復版誤報 64–73% 反而是好事，代表方法論在讀程式碼。(2) 別名是可教授的盲點：0/57 → 3/15。(3) Phase 1 品質是 Phase 2 的瓶頸：沒列出釋放點，引導就打偏。(4) 多次短執行優於一次長執行。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#1A1E2E;display:flex;flex-direction:column;padding:78px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#3C6FCB;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#3C6FCB;">Part 2 · 方法論 · cJSON</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#F4EFE4;">關鍵發現</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#8C93A8;margin-top:10px;">Four takeaways from the cJSON experiment</div>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-content:center;margin-top:30px;">
+    <div style="background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-top:6px solid #E2553C;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:16px;"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#E2553C;">01</span><span style="font-size:29px;font-weight:800;color:#F4EFE4;line-height:1.25;">誤報率與程式碼成熟度成反比</span></div>
+      <div style="font-size:21px;color:#C7CCDA;margin-top:14px;line-height:1.5;">已修復版誤報率 <b style="color:#E2553C;">64–73%</b> 反而是好事 —— 代表方法論在「讀程式碼」，不是背答案。</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-top:6px solid #E6A331;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:16px;"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#E6A331;">02</span><span style="font-size:29px;font-weight:800;color:#F4EFE4;line-height:1.25;">別名是可教授的盲點</span></div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:16px;"><span style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:900;color:#E2553C;">0/57</span><span style="font-family:'JetBrains Mono',monospace;font-size:30px;color:#8C93A8;">→</span><span style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:900;color:#2E9D63;">3/15</span></div>
+      <div style="font-size:21px;color:#C7CCDA;margin-top:8px;line-height:1.5;">一句通用引導，把零別名假說變成三個 ASAN 確認。</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-top:6px solid #3C6FCB;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:16px;"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#3C6FCB;">03</span><span style="font-size:29px;font-weight:800;color:#F4EFE4;line-height:1.25;">Phase 1 品質是 Phase 2 的瓶頸</span></div>
+      <div style="font-size:21px;color:#C7CCDA;margin-top:14px;line-height:1.5;">同一句引導，<b style="color:#F4EFE4;">Phase 1 沒列出釋放點，引導就打偏</b>。配方 ＝ 列出所有權轉移 ＋ 加引導。</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-top:6px solid #8557C9;border-radius:20px;padding:30px 32px;display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:16px;"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#8557C9;">04</span><span style="font-size:29px;font-weight:800;color:#F4EFE4;line-height:1.25;">多次短執行 ＞ 一次長執行</span></div>
+      <div style="font-size:21px;color:#C7CCDA;margin-top:14px;line-height:1.5;">短而獨立的執行涵蓋更廣的假說空間，勝過單次拉長的審查。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ 10 · 路線圖 (dark, climax) ════════ -->
+<section data-label="研究路線圖" data-speaker-notes="三階段研究路線圖。第一階段 cJSON 可行性驗證已完成，建立方法論的科學基礎，是 ACSAC 論文的根基。第二階段 NanoMQ/FlashMQ 泛化測試：測可轉移性、設計 MQTT 特定引導、跨模型比較。第三階段資安院合作專案實測：把方法論用到資安院實際開發的軟體系統上。一套方法：證明 → 泛化 → 實戰。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#1A1E2E;display:flex;flex-direction:column;padding:78px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#E6A331;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#E6A331;">Part 3 · 研究路線</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#F4EFE4;">三階段研究路線圖</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#8C93A8;margin-top:10px;">One method · proof → generalise → deploy</div>
+  </div>
+  <div style="flex:1;position:relative;display:flex;align-items:center;margin-top:18px;">
+    <div style="position:absolute;left:40px;right:40px;top:54px;height:8px;background:rgba(255,255,255,0.12);border-radius:4px;"></div>
+    <div style="position:absolute;left:40px;top:54px;height:8px;width:18%;background:linear-gradient(90deg,#2E9D63,#8557C9);border-radius:4px;"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:30px;width:100%;position:relative;">
+      <!-- stage 1 -->
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div style="width:34px;height:34px;border-radius:50%;background:#2E9D63;margin-bottom:30px;box-shadow:0 0 0 7px rgba(46,157,99,0.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;font-weight:800;">✓</div>
+        <div style="width:100%;background:rgba(46,157,99,0.08);border:2.5px solid #2E9D63;border-radius:22px;padding:28px 28px;box-sizing:border-box;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-size:30px;font-weight:900;color:#F4EFE4;">第一階段</span><span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:#fff;background:#2E9D63;border-radius:999px;padding:4px 14px;">已完成</span></div>
+          <div style="font-size:24px;font-weight:700;color:#2E9D63;margin-top:14px;">cJSON 可行性驗證</div>
+          <div style="height:1px;background:rgba(255,255,255,0.12);margin:16px 0;"></div>
+          <div style="font-size:20px;color:#C7CCDA;line-height:1.5;">建立方法論的科學基礎 —— 可量化、可重現。</div>
+          <div style="margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:#F4EFE4;background:rgba(255,255,255,0.06);border-radius:10px;padding:11px 15px;">★ ACSAC 2026 論文基礎</div>
+        </div>
+      </div>
+      <!-- stage 2 -->
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div style="width:34px;height:34px;border-radius:50%;background:#8557C9;margin-bottom:30px;box-shadow:0 0 0 7px rgba(133,87,201,0.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:800;">2</div>
+        <div style="width:100%;background:rgba(133,87,201,0.08);border:2.5px solid #8557C9;border-radius:22px;padding:28px 28px;box-sizing:border-box;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-size:30px;font-weight:900;color:#F4EFE4;">第二階段</span><span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:#fff;background:#8557C9;border-radius:999px;padding:4px 14px;">碩一</span></div>
+          <div style="font-size:24px;font-weight:700;color:#A581E0;margin-top:14px;">NanoMQ / FlashMQ 泛化</div>
+          <div style="height:1px;background:rgba(255,255,255,0.12);margin:16px 0;"></div>
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div style="font-size:20px;color:#C7CCDA;">· 測試方法論可轉移性</div>
+            <div style="font-size:20px;color:#C7CCDA;">· 設計 MQTT 特定引導</div>
+            <div style="font-size:20px;color:#C7CCDA;">· 跨模型比較</div>
+          </div>
+          <div style="margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:#F4EFE4;background:rgba(255,255,255,0.06);border-radius:10px;padding:11px 15px;">★ 論文擴展 · 實驗數據</div>
+        </div>
+      </div>
+      <!-- stage 3 -->
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div style="width:34px;height:34px;border-radius:50%;background:#E6A331;margin-bottom:30px;box-shadow:0 0 0 7px rgba(230,163,49,0.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:800;">3</div>
+        <div style="width:100%;background:rgba(230,163,49,0.08);border:2.5px solid #E6A331;border-radius:22px;padding:28px 28px;box-sizing:border-box;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-size:30px;font-weight:900;color:#F4EFE4;">第三階段</span><span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:#15130F;background:#E6A331;border-radius:999px;padding:4px 14px;">碩一下–碩二</span></div>
+          <div style="font-size:24px;font-weight:700;color:#E6A331;margin-top:14px;">資安院合作專案實測</div>
+          <div style="height:1px;background:rgba(255,255,255,0.12);margin:16px 0;"></div>
+          <div style="font-size:20px;color:#C7CCDA;line-height:1.5;">將方法論應用於資安院（NICS）開發的實際軟體系統，產出真實審計成果。</div>
+          <div style="margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:#F4EFE4;background:rgba(255,255,255,0.06);border-radius:10px;padding:11px 15px;">★ 碩士論文 ＋ 實戰成果</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:22px;text-align:center;"><span style="font-size:28px;font-weight:900;color:#F4EFE4;">一套方法論：<span style="color:#2E9D63;">證明</span> → <span style="color:#A581E0;">泛化</span> → <span style="color:#E6A331;">實戰</span></span></div>
+</section>
+
+<!-- ════════ 11 · 預期時程 (light) ════════ -->
+<section data-label="預期時程" data-speaker-notes="預期時程。2026/08–09：文獻探討、cJSON 實驗完整複製、NanoMQ 環境建置。2026/10–12：NanoMQ 實驗 Runs 1–4、Phase 1 模板迭代、Phase 2 引導設計。2027/01–03：FlashMQ 實驗 Runs 5–8、跨模型比較、數據分析。2027/04–06：論文撰寫、漏洞揭露、投稿。" style="width:100%;height:100%;box-sizing:border-box;font-family:'Noto Sans TC',system-ui,sans-serif;background:#FBF8F0;display:flex;flex-direction:column;padding:78px 104px;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="width:32px;height:5px;border-radius:3px;background:#E6A331;"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#E6A331;">Part 3 · 研究路線</span>
+    </div>
+    <div style="font-size:62px;font-weight:900;line-height:1.04;letter-spacing:-0.01em;color:#15130F;">預期時程</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:#6B6356;margin-top:10px;">Timeline · 2026 – 2027</div>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:22px;align-items:stretch;margin-top:42px;">
+    <div style="background:#fff;border:2px solid #E4DCCB;border-top:7px solid #2E9D63;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#2E9D63;">2026<br/>08–09</div>
+      <div style="height:1px;background:#E4DCCB;margin:20px 0;"></div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">文獻探討</div>
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">cJSON 實驗完整複製</div>
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">NanoMQ 環境建置</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:2px solid #E4DCCB;border-top:7px solid #3C6FCB;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#3C6FCB;">2026<br/>10–12</div>
+      <div style="height:1px;background:#E4DCCB;margin:20px 0;"></div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">NanoMQ 實驗 (Runs 1–4)</div>
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">Phase 1 模板迭代</div>
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">Phase 2 引導設計</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:2px solid #E4DCCB;border-top:7px solid #8557C9;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(33,30,24,0.06);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#8557C9;">2027<br/>01–03</div>
+      <div style="height:1px;background:#E4DCCB;margin:20px 0;"></div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">FlashMQ 實驗 (Runs 5–8)</div>
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">跨模型比較</div>
+        <div style="font-size:22px;font-weight:700;color:#15130F;line-height:1.4;">數據分析</div>
+      </div>
+    </div>
+    <div style="background:#15130F;border:2px solid #15130F;border-top:7px solid #E6A331;border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(33,30,24,0.1);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#E6A331;">2027<br/>04–06</div>
+      <div style="height:1px;background:rgba(255,255,255,0.16);margin:20px 0;"></div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="font-size:22px;font-weight:700;color:#F4EFE4;line-height:1.4;">論文撰寫</div>
+        <div style="font-size:22px;font-weight:700;color:#F4EFE4;line-height:1.4;">漏洞揭露</div>
+        <div style="font-size:22px;font-weight:700;color:#F4EFE4;line-height:1.4;">投稿</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>
